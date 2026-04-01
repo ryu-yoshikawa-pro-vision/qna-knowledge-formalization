@@ -132,7 +132,7 @@ error 時は次を返す。
 * 到達不能な状態への再送は `STATE_CONFLICT` を返す
 * 招待再送、join request 承認、owner transfer、bookmark、read / read-all は重複作成を起こさない
 
-## 2-6. 同時編集と更新競合
+## 2-7. 同時編集と更新競合
 
 MVP では optimistic lock や `ETag` は導入しない。
 
@@ -140,7 +140,7 @@ MVP では optimistic lock や `ETag` は導入しない。
 * 更新競合時は revision を残したうえで last-write-wins とする
 * 運営操作と本文編集は API を分けて競合面を狭くする
 
-## 2-7. ログの意味
+## 2-8. ログの意味
 
 この文書で「ログを残す」は汎用 operation log を意味しない。
 
@@ -1040,7 +1040,7 @@ Mobile bearer token の再発行。
 }
 ```
 
-## 2-5. endpoint 記述の補完規則
+## 2-6. endpoint 記述の補完規則
 
 個別 endpoint 節で省略した項目は、実装 handoff では次を既定値として読む。
 
