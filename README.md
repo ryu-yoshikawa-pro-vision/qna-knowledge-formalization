@@ -1,4 +1,4 @@
-# Codex Project Template
+# QnA Knowledge Formalization
 
 このテンプレートは、Codex を使った開発を `PLAN -> TASKS -> REPORT` の運用で始めるための最小セットです。
 
