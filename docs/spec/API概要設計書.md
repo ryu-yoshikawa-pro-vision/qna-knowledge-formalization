@@ -89,9 +89,9 @@
 
 を明確に分ける。
 
-## 2-4. レスポンスは最低限一貫させる
+## 2-4. レスポンス contract を固定する
 
-基本レスポンス形は次を前提とする。
+すべての endpoint は wire format として次の envelope を使う。
 
 ```json
 {
@@ -101,7 +101,7 @@
 }
 ```
 
-エラー時は
+error 時は次を返す。
 
 ```json
 {
@@ -113,6 +113,16 @@
   }
 }
 ```
+
+ルール:
+
+* bare array を返さない
+* bare scalar を返さない
+* list API は `data.items[]` を使う
+* page を受け取る list API は `meta.page`, `meta.page_size`, `meta.total_count`, `meta.total_pages` を返す
+* mutation API は follow-up GET を前提にせず、primary resource の current snapshot を返す
+* idempotent replay 時は `meta.idempotent_replay = true` を返す
+* 下位節で response を簡略記載する場合も、実 wire format は必ずこの envelope を使う
 
 ## 2-5. idempotency / retry / 二重送信
 
@@ -170,6 +180,58 @@ MVP では optimistic lock や `ETag` は導入しない。
 * `ALREADY_EXISTS`
 * `EXPIRED`
 * `DOMAIN_MISMATCH`
+
+## 3-4. auth を endpoint 節で省略した場合の既定ルール
+
+endpoint 節に `### auth` がない場合は、次を既定とする。
+
+### auth bootstrap
+
+* `POST /api/auth/google/callback`
+  * Google 認証結果を受け取る bootstrap endpoint
+
+### authenticated pre-membership
+
+* `GET /api/auth/me`
+  * ログイン済みユーザー
+* `POST /api/auth/logout`
+  * 現在の session / refresh token 本人
+* `GET /api/workspace-resolution`
+  * ログイン済みユーザー
+* `POST /api/workspaces`
+  * ログイン済みユーザー
+* `POST /api/workspaces/current/join-requests`
+  * ログイン済み未参加ユーザー
+* `POST /api/workspace-join-requests/{joinRequestId}/cancel`
+  * 申請者本人
+
+### active member default
+
+次は、個別 auth がない限り active member を既定 auth とする。
+
+* `GET /api/workspaces/current`
+* `GET /api/workspaces/current/tags`
+* `GET /api/knowledges*`
+* `POST /api/knowledges`
+* `GET /api/knowledge-edit-drafts/{draftId}`
+* `GET /api/knowledge-edit-drafts/{draftId}/revisions`
+* `GET /api/questions*`
+* `POST /api/questions`
+* `POST /api/questions/{questionId}/answers`
+* `GET /api/answers/{answerId}/revisions`
+* `POST /api/comments`
+* `POST /api/bookmarks`
+* `DELETE /api/bookmarks`
+* `GET /api/bookmarks`
+* `GET /api/notifications`
+* `POST /api/notifications/{notificationId}/read`
+* `POST /api/notifications/read-all`
+* `GET /api/notifications/unread-count`
+
+補足:
+
+* endpoint 節に個別 auth がある場合はそちらを優先する
+* visibility / role / author / state の追加条件は別途適用する
 
 ---
 
@@ -536,7 +598,7 @@ Mobile bearer token の再発行。
 
 ---
 
-## 6-8. `POST /api/workspace-join-requests/{id}/approve`
+## 6-8. `POST /api/workspace-join-requests/{joinRequestId}/approve`
 
 ### 用途
 
@@ -548,7 +610,7 @@ Mobile bearer token の再発行。
 
 ---
 
-## 6-9. `POST /api/workspace-join-requests/{id}/reject`
+## 6-9. `POST /api/workspace-join-requests/{joinRequestId}/reject`
 
 ### 用途
 
@@ -568,7 +630,7 @@ Mobile bearer token の再発行。
 
 ---
 
-## 6-10. `POST /api/workspace-join-requests/{id}/cancel`
+## 6-10. `POST /api/workspace-join-requests/{joinRequestId}/cancel`
 
 ### 用途
 
@@ -986,8 +1048,8 @@ Mobile bearer token の再発行。
 個別 endpoint 節で省略した項目は、実装 handoff では次を既定値として読む。
 
 * request body 未記載: body なし、または path / query のみで完結する
-* response 未記載: `data` に最新 resource snapshot、`meta` に pagination か permission を返す
-* auth 未記載: 対象 workspace の active member を前提に追加の role 判定なし
+* response 未記載: `# 23. contract 補完` を正とし、list API は `data.items[]`、mutation API は primary resource の current snapshot を返す
+* auth 未記載: `3-4. auth を endpoint 節で省略した場合の既定ルール` を適用する
 * state rule 未記載: resource の状態は変えず、参照または単純更新のみ
 * side effect 未記載: audit column 更新以外の副作用なし
 * affected tables 未記載: 対象 resource の主 table を更新し、詳細は `テーブル定義.md` と `画面APIデータ対応表.md` を参照する
@@ -1363,7 +1425,7 @@ Mobile bearer token の再発行。
 ```json
 {
   "data": {
-    "revisions": [
+    "items": [
       {
         "id": "uuid",
         "revision_number": 3,
@@ -1375,7 +1437,9 @@ Mobile bearer token の再発行。
         "edit_summary": "表現を更新"
       }
     ]
-  }
+  },
+  "meta": {},
+  "error": null
 }
 ```
 
@@ -1477,7 +1541,7 @@ Q&A由来ナレッジ作成。
 ```json
 {
   "data": {
-    "revisions": [
+    "items": [
       {
         "id": "uuid",
         "revision_number": 2,
@@ -1488,7 +1552,9 @@ Q&A由来ナレッジ作成。
         "created_at": "2026-04-01T00:00:00Z"
       }
     ]
-  }
+  },
+  "meta": {},
+  "error": null
 }
 ```
 
@@ -1870,17 +1936,17 @@ MVP の検索責務は一覧 API に含める。
 | `POST /api/workspace-invitations/{invitationId}/resend` | `workspace_invitations` | 旧 `pending` を `revoked`、新 `pending` を追加 | 新 token / 新 expiry 発行 | `FORBIDDEN`, `STATE_CONFLICT`, `NOT_FOUND` |
 | `POST /api/workspace-invitations/{token}/accept` | `workspace_invitations`, `workspace_members`, `workspace_membership_logs` | token 有効時に `accepted` | member 作成、重複参加防止 | `FORBIDDEN`, `EXPIRED`, `DOMAIN_MISMATCH` |
 | `POST /api/workspaces/current/join-requests` | `workspace_join_requests`, `notifications` | 未参加かつ同一 workspace に `pending` なし | owner / admin へ `join_request_submitted` 通知 | `FORBIDDEN`, `VALIDATION_ERROR`, `DOMAIN_MISMATCH` |
-| `POST /api/workspace-join-requests/{id}/approve` | `workspace_join_requests`, `workspace_members`, `workspace_membership_logs`, `notifications` | `pending -> approved` | 申請者を member 追加、承認通知 | `FORBIDDEN`, `STATE_CONFLICT`, `NOT_FOUND` |
-| `POST /api/workspace-join-requests/{id}/reject` | `workspace_join_requests`, `notifications` | `pending -> rejected` | 却下通知 | `FORBIDDEN`, `STATE_CONFLICT`, `NOT_FOUND` |
-| `POST /api/workspaces/current/members/{userId}/role` | `workspace_members`, `workspace_role_change_logs`, `notifications` | role change rules を満たす場合のみ | role 変更通知 | `FORBIDDEN`, `STATE_CONFLICT`, `VALIDATION_ERROR` |
-| `POST /api/workspaces/current/owner-transfer` | `workspace_members`, `workspace_role_change_logs`, `notifications` | owner を交代させる | 旧 owner を admin にし、transfer 通知 | `FORBIDDEN`, `STATE_CONFLICT`, `VALIDATION_ERROR` |
-| `POST /api/workspaces/current/members/{userId}/remove` | `workspace_members`, `workspace_membership_logs`, `notifications` | active member を `removed` | 削除通知、membership log 記録 | `FORBIDDEN`, `STATE_CONFLICT`, `VALIDATION_ERROR` |
+| `POST /api/workspace-join-requests/{joinRequestId}/approve` | `workspace_join_requests`, `workspace_members`, `workspace_membership_logs`, `notifications` | `pending -> approved` | 申請者を member 追加、承認通知 | `FORBIDDEN`, `STATE_CONFLICT`, `NOT_FOUND` |
+| `POST /api/workspace-join-requests/{joinRequestId}/reject` | `workspace_join_requests`, `notifications` | `pending -> rejected` | 却下通知 | `FORBIDDEN`, `STATE_CONFLICT`, `NOT_FOUND` |
+| `POST /api/workspaces/current/members/{userId}/role` | `workspace_members`, `workspace_role_change_logs` | role change rules を満たす場合のみ | role change log 記録 | `FORBIDDEN`, `STATE_CONFLICT`, `VALIDATION_ERROR` |
+| `POST /api/workspaces/current/owner-transfer` | `workspace_members`, `workspace_role_change_logs` | owner を交代させる | 旧 owner を admin にし、role change log 記録 | `FORBIDDEN`, `STATE_CONFLICT`, `VALIDATION_ERROR` |
+| `POST /api/workspaces/current/members/{userId}/remove` | `workspace_members`, `workspace_membership_logs` | active member を `removed` | membership log 記録 | `FORBIDDEN`, `STATE_CONFLICT`, `VALIDATION_ERROR` |
 
 ## 22-2. knowledge / review
 
 | endpoint | affected tables | state rule | side effect | 主な error code |
 | --- | --- | --- | --- | --- |
-| `POST /api/knowledges` | `knowledge_items`, `knowledge_revisions`, `knowledge_item_tags` | 初期状態は `draft` または `shared` | revision 1 作成、tag 紐付け | `FORBIDDEN`, `VALIDATION_ERROR` |
+| `POST /api/knowledges` | `knowledge_items`, `knowledge_revisions`, `knowledge_item_tags` | `submit_action` に応じて初期状態は `draft` / `shared` / `review_requested` | revision 1 作成、tag 紐付け | `FORBIDDEN`, `VALIDATION_ERROR` |
 | `PATCH /api/knowledges/{knowledgeId}` | `knowledge_items`, `knowledge_revisions`, `knowledge_item_tags` | `review_requested` / `changes_requested` で保存したら `shared` | 新 revision 作成、tag 再同期 | `FORBIDDEN`, `STATE_CONFLICT`, `VALIDATION_ERROR` |
 | `POST /api/knowledges/{knowledgeId}/share` | `knowledge_items` | `draft -> shared` | 公開範囲変更のみ | `FORBIDDEN`, `STATE_CONFLICT` |
 | `POST /api/knowledges/{knowledgeId}/request-review` | `knowledge_items` | `draft / shared -> review_requested` | レビュー待ち件数対象化 | `FORBIDDEN`, `STATE_CONFLICT`, `VALIDATION_ERROR` |
@@ -1924,3 +1990,611 @@ MVP の検索責務は一覧 API に含める。
 | `DELETE /api/bookmarks` | `bookmarks` | 自分のみ | bookmark 削除 | `FORBIDDEN`, `NOT_FOUND` |
 | `POST /api/notifications/{notificationId}/read` | `notifications` | 自分宛のみ | `is_read = true` | `FORBIDDEN`, `NOT_FOUND` |
 | `POST /api/notifications/read-all` | `notifications` | 自分宛未読のみ | bulk read | `FORBIDDEN` |
+
+---
+
+# 23. contract 補完
+
+この節は、各 endpoint 節で request / response が省略されている部分を補完する。
+各個別節に詳細がある場合はそちらを優先し、未定義部分はこの節を正とする。
+
+## 23-1. request 補完
+
+### `PATCH /api/knowledges/{knowledgeId}`
+
+```json
+{
+  "title": "title",
+  "summary": "summary or null",
+  "content_json": {},
+  "content_markdown": "markdown",
+  "visibility": "workspace | admin_only | owner_only",
+  "draft_visibility": "private | reviewer_shared | null",
+  "result_type": "success | failure | conditional_success | unverified | null",
+  "context_text": "context or null",
+  "tag_ids": ["uuid"],
+  "edit_summary": "optional"
+}
+```
+
+### `PATCH /api/knowledge-edit-drafts/{draftId}`
+
+```json
+{
+  "title": "title",
+  "summary": "summary or null",
+  "content_json": {},
+  "content_markdown": "markdown",
+  "draft_visibility": "private | reviewer_shared",
+  "result_type": "success | failure | conditional_success | unverified | null",
+  "context_text": "context or null",
+  "tag_ids": ["uuid"],
+  "edit_summary": "optional"
+}
+```
+
+### `PATCH /api/questions/{questionId}`
+
+```json
+{
+  "visibility": "workspace | admin_only | owner_only",
+  "title": "title",
+  "content_json": {},
+  "content_markdown": "markdown",
+  "tag_ids": ["uuid"],
+  "edit_summary": "optional"
+}
+```
+
+### `PATCH /api/answers/{answerId}`
+
+```json
+{
+  "content_json": {},
+  "content_markdown": "markdown"
+}
+```
+
+### `PATCH /api/comments/{commentId}`
+
+```json
+{
+  "content_json": {},
+  "content_markdown": "markdown"
+}
+```
+
+補足:
+
+* request で省略した field は current 値を維持する
+* `null` を許容してよい field だけ明示的に `null` を送ってよい
+
+## 23-2. 共通 payload
+
+### `user summary`
+
+* `id`
+* `email`
+* `display_name`
+* `avatar_url`
+
+### `workspace membership summary`
+
+* `membership_id`
+* `workspace_id`
+* `user`
+  * `user summary`
+* `role`
+* `membership_status`
+* `joined_at`
+* `removed_at`
+
+### `workspace invitation item`
+
+* `id`
+* `invited_email`
+* `invited_role`
+* `status`
+* `expires_at`
+* `invited_by`
+  * `user summary`
+* `accepted_by`
+  * `user summary | null`
+* `accepted_at`
+* `created_at`
+* `updated_at`
+
+### `workspace join request item`
+
+* `id`
+* `request_user`
+  * `user summary`
+* `request_email`
+* `request_comment`
+* `status`
+* `reviewed_by`
+  * `user summary | null`
+* `review_comment`
+* `requested_at`
+* `reviewed_at`
+* `created_at`
+* `updated_at`
+
+### `tag item`
+
+* `id`
+* `name`
+* `status`
+* `merged_into_tag_id`
+* `created_at`
+* `updated_at`
+
+### `revision item`
+
+* `id`
+* `revision_number`
+* `edited_by`
+  * `user summary`
+* `created_at`
+* `edit_summary`
+
+### `knowledge list item`
+
+* `id`
+* `source_type`
+* `status`
+* `visibility`
+* `draft_visibility`
+* `title`
+* `summary`
+* `result_type`
+* `updated_at`
+* `formalized_at`
+* `created_by`
+  * `user summary`
+* `tags`
+  * `tag item[]`
+* `viewer`
+  * `is_bookmarked`
+
+### `knowledge detail`
+
+* `id`
+* `workspace_id`
+* `source_type`
+* `source_question_id`
+* `source_answer_id`
+* `status`
+* `visibility`
+* `draft_visibility`
+* `title`
+* `summary`
+* `content_json`
+* `content_markdown`
+* `result_type`
+* `context_text`
+* `formalized_at`
+* `created_by`
+  * `user summary`
+* `updated_by`
+  * `user summary`
+* `tags`
+  * `tag item[]`
+* `links`
+  * `link item[]`
+* `comments`
+  * `comment item[]`
+* `latest_revision`
+  * `revision item | null`
+* `archive_info`
+  * `archived_at`
+  * `archived_by`
+    * `user summary | null`
+  * `archive_reason`
+* `permissions`
+  * knowledge permissions DTO
+
+### `knowledge review item`
+
+* `id`
+* `reviewer`
+  * `user summary`
+* `review_result`
+* `comment_json`
+* `comment_markdown`
+* `created_at`
+
+### `knowledge edit draft detail`
+
+* `id`
+* `knowledge_item_id`
+* `status`
+* `draft_visibility`
+* `title`
+* `summary`
+* `content_json`
+* `content_markdown`
+* `result_type`
+* `context_text`
+* `created_by`
+  * `user summary`
+* `updated_by`
+  * `user summary`
+* `tags`
+  * `tag item[]`
+* `comments`
+  * `comment item[]`
+* `latest_revision`
+  * `revision item | null`
+* `permissions`
+  * knowledge edit draft permissions DTO
+
+### `question list item`
+
+* `id`
+* `status`
+* `visibility`
+* `title`
+* `updated_at`
+* `created_by`
+  * `user summary`
+* `tags`
+  * `tag item[]`
+* `stats`
+  * `answer_count`
+  * `comment_count`
+* `accepted_answer_exists`
+* `viewer`
+  * `is_bookmarked`
+
+### `answer item`
+
+* `id`
+* `content_json`
+* `content_markdown`
+* `created_by`
+  * `user summary`
+* `updated_by`
+  * `user summary`
+* `locked_at`
+* `is_deleted`
+* `created_at`
+* `updated_at`
+* `permissions`
+  * answer permissions DTO
+
+### `question detail`
+
+* `id`
+* `status`
+* `visibility`
+* `title`
+* `content_json`
+* `content_markdown`
+* `created_by`
+  * `user summary`
+* `updated_by`
+  * `user summary`
+* `accepted_answer_id`
+* `accepted_answer_snapshot_json`
+* `accepted_answer_snapshot_markdown`
+* `tags`
+  * `tag item[]`
+* `answers`
+  * `answer item[]`
+* `comments`
+  * `comment item[]`
+* `links`
+  * `link item[]`
+* `derived_knowledges`
+  * `knowledge list item[]`
+* `permissions`
+  * question permissions DTO
+
+### `comment item`
+
+* `id`
+* `content_type`
+* `content_id`
+* `parent_comment_id`
+* `content_json`
+* `content_markdown`
+* `created_by`
+  * `user summary`
+* `updated_by`
+  * `user summary`
+* `is_edited`
+* `edited_at`
+* `is_hidden`
+* `hidden_reason_category`
+* `hidden_reason_text`
+* `created_at`
+* `updated_at`
+* `permissions`
+  * comment permissions DTO
+
+### `link item`
+
+* `id`
+* `source_type`
+* `source_id`
+* `target_type`
+* `target_id`
+* `link_type`
+* `created_by`
+  * `user summary`
+* `created_at`
+
+### `bookmark item`
+
+* `id`
+* `content_type`
+* `content_id`
+* `created_at`
+* `preview`
+  * `title`
+  * `summary`
+  * `status`
+  * `visibility`
+  * `updated_at`
+  * `tags`
+
+### `notification item`
+
+* `id`
+* `type`
+* `actor`
+  * `user summary | null`
+* `target_type`
+* `target_id`
+* `message`
+* `is_read`
+* `created_at`
+
+### `review queue item`
+
+* `content_type`
+  * `knowledge | knowledge_edit_draft`
+* `id`
+* `status`
+* `title`
+* `summary`
+* `submitted_at`
+* `updated_at`
+* `created_by`
+  * `user summary`
+* `tags`
+  * `tag item[]`
+
+## 23-3. response 補完
+
+### auth
+
+#### `POST /api/auth/logout`
+
+* `data.logged_out = true`
+
+### workspace / membership / invitation
+
+#### `GET /api/workspaces/current/members`
+
+* `data.items[] = workspace membership summary`
+
+#### `POST /api/workspaces/current/invitations`
+
+* `data.invitation = workspace invitation item`
+
+#### `GET /api/workspaces/current/invitations`
+
+* `data.items[] = workspace invitation item`
+
+#### `POST /api/workspace-invitations/{invitationId}/revoke`
+
+#### `POST /api/workspace-invitations/{invitationId}/resend`
+
+* `data.invitation = workspace invitation item`
+
+#### `POST /api/workspace-invitations/{token}/accept`
+
+* `data.invitation = workspace invitation item`
+* `data.membership = workspace membership summary`
+
+#### `POST /api/workspaces/current/join-requests`
+
+* `data.join_request = workspace join request item`
+
+#### `GET /api/workspaces/current/join-requests`
+
+* `data.items[] = workspace join request item`
+
+#### `POST /api/workspace-join-requests/{joinRequestId}/approve`
+
+#### `POST /api/workspace-join-requests/{joinRequestId}/reject`
+
+#### `POST /api/workspace-join-requests/{joinRequestId}/cancel`
+
+* `data.join_request = workspace join request item`
+
+#### `POST /api/workspaces/current/members/{userId}/role`
+
+#### `POST /api/workspaces/current/members/{userId}/remove`
+
+* `data.membership = workspace membership summary`
+
+#### `POST /api/workspaces/current/owner-transfer`
+
+* `data.owner_transfer.previous_owner_membership = workspace membership summary`
+* `data.owner_transfer.current_owner_membership = workspace membership summary`
+
+### tag
+
+#### `GET /api/workspaces/current/tags`
+
+* `data.items[] = tag item`
+
+#### `POST /api/workspaces/current/tags`
+
+#### `PATCH /api/tags/{tagId}`
+
+#### `POST /api/tags/{tagId}/merge`
+
+#### `POST /api/tags/{tagId}/archive`
+
+* `data.tag = tag item`
+
+### knowledge
+
+#### `GET /api/knowledges`
+
+* `data.items[] = knowledge list item`
+
+#### `POST /api/knowledges`
+
+#### `GET /api/knowledges/{knowledgeId}`
+
+#### `PATCH /api/knowledges/{knowledgeId}`
+
+#### `POST /api/knowledges/{knowledgeId}/share`
+
+#### `POST /api/knowledges/{knowledgeId}/request-review`
+
+#### `POST /api/knowledges/{knowledgeId}/archive`
+
+#### `POST /api/knowledges/{knowledgeId}/revoke-formal`
+
+#### `POST /api/knowledges/{knowledgeId}/formalize`
+
+#### `POST /api/knowledges/{knowledgeId}/draft-visibility`
+
+* `data.knowledge = knowledge detail`
+
+#### `GET /api/knowledges/{knowledgeId}/revisions`
+
+* `data.items[] = revision item`
+
+#### `GET /api/knowledges/{knowledgeId}/revisions/{revisionId}`
+
+* `data.revision = revision item`
+* `data.snapshot.title`
+* `data.snapshot.summary`
+* `data.snapshot.content_json_snapshot`
+* `data.snapshot.content_markdown_snapshot`
+* `data.snapshot.result_type_snapshot`
+* `data.snapshot.context_text_snapshot`
+
+#### `POST /api/knowledges/{knowledgeId}/reviews`
+
+* `data.review = knowledge review item`
+* `data.knowledge = knowledge detail`
+
+#### `POST /api/knowledges/{knowledgeId}/edit-drafts`
+
+* `data.knowledge_edit_draft = knowledge edit draft detail`
+
+### knowledge edit draft
+
+#### `GET /api/knowledge-edit-drafts/{draftId}`
+
+#### `PATCH /api/knowledge-edit-drafts/{draftId}`
+
+#### `POST /api/knowledge-edit-drafts/{draftId}/share`
+
+#### `POST /api/knowledge-edit-drafts/{draftId}/request-review`
+
+#### `POST /api/knowledge-edit-drafts/{draftId}/discard`
+
+#### `POST /api/knowledge-edit-drafts/{draftId}/apply`
+
+#### `POST /api/knowledge-edit-drafts/{draftId}/draft-visibility`
+
+* `data.knowledge_edit_draft = knowledge edit draft detail`
+
+#### `GET /api/knowledge-edit-drafts/{draftId}/revisions`
+
+* `data.items[] = revision item`
+
+#### `POST /api/knowledge-edit-drafts/{draftId}/reviews`
+
+* `data.review = knowledge review item`
+* `data.knowledge_edit_draft = knowledge edit draft detail`
+
+### question / answer
+
+#### `GET /api/questions`
+
+* `data.items[] = question list item`
+
+#### `POST /api/questions`
+
+#### `GET /api/questions/{questionId}`
+
+#### `PATCH /api/questions/{questionId}`
+
+#### `POST /api/questions/{questionId}/accept-answer`
+
+#### `POST /api/questions/{questionId}/reopen`
+
+#### `POST /api/questions/{questionId}/archive`
+
+* `data.question = question detail`
+
+#### `GET /api/questions/{questionId}/revisions`
+
+#### `GET /api/answers/{answerId}/revisions`
+
+* `data.items[] = revision item`
+
+#### `POST /api/questions/{questionId}/knowledges`
+
+* `data.knowledge = knowledge detail`
+
+#### `POST /api/questions/{questionId}/answers`
+
+#### `PATCH /api/answers/{answerId}`
+
+#### `POST /api/answers/{answerId}/delete`
+
+* `data.answer = answer item`
+
+### comment / link / bookmark / notification / review queue
+
+#### `POST /api/comments`
+
+#### `PATCH /api/comments/{commentId}`
+
+#### `POST /api/comments/{commentId}/hide`
+
+* `data.comment = comment item`
+
+#### `POST /api/content-links`
+
+#### `DELETE /api/content-links/{linkId}`
+
+* `data.link = link item`
+
+#### `POST /api/bookmarks`
+
+#### `DELETE /api/bookmarks`
+
+* `data.bookmark = bookmark item`
+
+#### `GET /api/bookmarks`
+
+* `data.items[] = bookmark item`
+
+#### `GET /api/notifications`
+
+* `data.items[] = notification item`
+
+#### `POST /api/notifications/{notificationId}/read`
+
+* `data.notification = notification item`
+
+#### `POST /api/notifications/read-all`
+
+* `data.read_count`
+* `data.unread_count_after`
+
+#### `GET /api/review-queue`
+
+* `data.items[] = review queue item`
