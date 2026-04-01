@@ -580,6 +580,12 @@ Mobile bearer token の再発行。
 }
 ```
 
+### auth
+
+* ログイン済みユーザー
+* 同一 domain の workspace に対して未参加であること
+* 自分自身の `active` membership を持たないこと
+
 ### rules
 
 * request の `comment` は DB の `workspace_join_requests.request_comment` へ保存する
@@ -865,6 +871,10 @@ Mobile bearer token の再発行。
 }
 ```
 
+### auth
+
+* active member
+
 ### rules
 
 * `source_type = qa_derived` の新規作成は `POST /api/questions/{questionId}/knowledges` を使う
@@ -895,20 +905,7 @@ Mobile bearer token の再発行。
 
 ### permissions DTO
 
-```json
-{
-  "can_edit": true,
-  "can_share": true,
-  "can_request_review": true,
-  "can_archive": true,
-  "can_revoke_formal": false,
-  "can_formalize": false,
-  "can_review": false,
-  "can_comment": true,
-  "can_add_link": true,
-  "can_create_edit_draft": false
-}
-```
+`23-2. 共通 payload` の `knowledge permissions DTO` を参照。
 
 ---
 
@@ -1305,6 +1302,10 @@ Mobile bearer token の再発行。
 }
 ```
 
+### auth
+
+* active member
+
 ---
 
 ## 11-3. `GET /api/questions/{questionId}`
@@ -1326,18 +1327,7 @@ Mobile bearer token の再発行。
 
 ### permissions DTO
 
-```json
-{
-  "can_edit": true,
-  "can_answer": true,
-  "can_accept_answer": false,
-  "can_reopen": false,
-  "can_archive": false,
-  "can_create_knowledge": true,
-  "can_comment": true,
-  "can_add_link": true
-}
-```
+`23-2. 共通 payload` の `question permissions DTO` を参照。
 
 ---
 
@@ -1580,6 +1570,11 @@ Q&A由来ナレッジ作成。
   "mentioned_user_ids": ["uuid"]
 }
 ```
+
+### auth
+
+* active member
+* 対象 content の閲覧条件を満たすこと
 
 ### rules
 
@@ -2124,8 +2119,19 @@ MVP の検索責務は一覧 API に含める。
 
 * `id`
 * `name`
+* `normalized_name`
 * `status`
+* `usage_count`
+* `created_by`
+  * `user summary`
 * `merged_into_tag_id`
+* `merged_into_tag_name`
+* `sample_contents[]`
+  * `content_type`
+  * `content_id`
+  * `title`
+  * `created_at`
+  * `updated_at`
 * `created_at`
 * `updated_at`
 
@@ -2178,6 +2184,9 @@ MVP の検索責務は一覧 API に含める。
   * `user summary`
 * `updated_by`
   * `user summary`
+* `updated_at`
+* `last_content_author`
+  * `user summary | null`
 * `tags`
   * `tag item[]`
 * `links`
@@ -2191,6 +2200,8 @@ MVP の検索責務は一覧 API に含める。
   * `archived_by`
     * `user summary | null`
   * `archive_reason`
+* `viewer`
+  * `is_bookmarked`
 * `permissions`
   * knowledge permissions DTO
 
@@ -2288,6 +2299,8 @@ MVP の検索責務は一覧 API に含める。
   * `link item[]`
 * `derived_knowledges`
   * `knowledge list item[]`
+* `viewer`
+  * `is_bookmarked`
 * `permissions`
   * question permissions DTO
 
@@ -2337,7 +2350,10 @@ MVP の検索責務は一覧 API に含める。
   * `status`
   * `visibility`
   * `updated_at`
+  * `created_by`
+    * `user summary`
   * `tags`
+    * `tag item[]`
 
 ### `notification item`
 
@@ -2365,6 +2381,51 @@ MVP の検索責務は一覧 API に含める。
   * `user summary`
 * `tags`
   * `tag item[]`
+
+### `knowledge permissions DTO`
+
+* `can_edit`
+* `can_share`
+* `can_request_review`
+* `can_archive`
+* `can_revoke_formal`
+* `can_formalize`
+* `can_review`
+* `can_comment`
+* `can_add_link`
+* `can_create_edit_draft`
+
+### `knowledge edit draft permissions DTO`
+
+* `can_edit`
+* `can_share`
+* `can_request_review`
+* `can_discard`
+* `can_apply`
+* `can_review`
+* `can_comment`
+
+### `question permissions DTO`
+
+* `can_edit`
+* `can_answer`
+* `can_accept_answer`
+* `can_reopen`
+* `can_archive`
+* `can_create_knowledge`
+* `can_comment`
+* `can_add_link`
+
+### `answer permissions DTO`
+
+* `can_edit`
+* `can_delete`
+
+### `comment permissions DTO`
+
+* `can_edit`
+* `can_hide`
+* `can_reply`
 
 ## 23-3. response 補完
 
