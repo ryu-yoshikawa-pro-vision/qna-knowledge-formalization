@@ -114,6 +114,31 @@
 }
 ```
 
+## 2-5. idempotency / retry / 二重送信
+
+状態遷移 API は二重送信前提で実装する。
+
+* 同一 request を再送しても、すでに目標状態なら副作用なしで current snapshot を返す
+* 到達不能な状態への再送は `STATE_CONFLICT` を返す
+* 招待再送、join request 承認、owner transfer、bookmark、read / read-all は重複作成を起こさない
+
+## 2-6. 同時編集と更新競合
+
+MVP では optimistic lock や `ETag` は導入しない。
+
+* 本文編集は author-only を前提にする
+* 更新競合時は revision を残したうえで last-write-wins とする
+* 運営操作と本文編集は API を分けて競合面を狭くする
+
+## 2-7. ログの意味
+
+この文書で「ログを残す」は汎用 operation log を意味しない。
+
+* 本文更新は `*_revisions`
+* review は `knowledge_reviews` / `knowledge_edit_draft_reviews`
+* membership イベントは `workspace_membership_logs`
+* role change は `workspace_role_change_logs`
+
 ---
 
 # 3. 認証・認可
@@ -137,7 +162,7 @@
 
 ## 3-3. エラーコード例
 
-* `UNAUTHORIZED`
+* `UNAUTHENTICATED`
 * `FORBIDDEN`
 * `NOT_FOUND`
 * `VALIDATION_ERROR`
@@ -176,7 +201,7 @@ Google認証結果を受けて、アプリユーザーを作成/更新し、セ�
     "workspace_resolution": {
       "has_workspace": true,
       "workspace_id": "uuid",
-      "membership_status": "active"
+      "relationship_status": "active_member"
     },
     "auth": {
       "transport": "cookie",
@@ -192,6 +217,7 @@ Google認証結果を受けて、アプリユーザーを作成/更新し、セ�
 * Google login 開始は client 側で行い、専用 API は持たない
 * `client_platform = web` の場合は session cookie をセットする
 * `client_platform = mobile` の場合は `access_token` / `refresh_token` を返す
+* `relationship_status` は `none / pending_join_request / active_member / removed_member` のいずれか
 
 ---
 
@@ -272,10 +298,16 @@ Mobile bearer token の再発行。
       "id": "uuid",
       "name": "Example Workspace"
     },
-    "membership_status": "none"
+    "relationship_status": "none",
+    "join_request": null
   }
 }
 ```
+
+### rules
+
+* `relationship_status` は `none / pending_join_request / active_member / removed_member`
+* `join_request` は `pending_join_request` の場合だけ `id`, `status`, `request_comment` を返す
 
 ---
 
@@ -318,6 +350,24 @@ Mobile bearer token の再発行。
 ### 用途
 
 現在所属中のワークスペース情報取得。
+
+### response
+
+```json
+{
+  "data": {
+    "workspace": {
+      "id": "uuid",
+      "name": "Example Workspace",
+      "primary_domain": "example.com"
+    },
+    "current_membership": {
+      "role": "member",
+      "membership_status": "active"
+    }
+  }
+}
+```
 
 ---
 
@@ -467,6 +517,10 @@ Mobile bearer token の再発行。
   "comment": "参加申請コメント"
 }
 ```
+
+### rules
+
+* request の `comment` は DB の `workspace_join_requests.request_comment` へ保存する
 
 ---
 
@@ -718,6 +772,11 @@ Mobile bearer token の再発行。
 
 一覧カード向けの最小情報を返す。
 
+### rules
+
+* `tag_ids[]` には `active` と `merged` の tag ID を渡せる
+* `merged` tag ID が渡された場合は統合先 tag に解決してから AND 条件で検索する
+
 ---
 
 ## 8-2. `POST /api/knowledges`
@@ -730,6 +789,7 @@ Mobile bearer token の再発行。
 
 ```json
 {
+  "submit_action": "draft",
   "source_type": "direct_post",
   "visibility": "workspace",
   "draft_visibility": "private",
@@ -746,7 +806,11 @@ Mobile bearer token の再発行。
 ### rules
 
 * `source_type = qa_derived` の新規作成は `POST /api/questions/{questionId}/knowledges` を使う
-* 保存時は review_requested 条件を未満でもよい
+* `submit_action` は `draft / shared / request_review`
+* `submit_action = draft` の場合は review_requested 条件を未満でもよい
+* `submit_action = shared` の場合は初期状態を `shared` にする
+* `submit_action = request_review` の場合は review_requested 条件を満たしたうえで初期状態を `review_requested` にする
+* `submit_action != draft` の場合は `draft_visibility = null` として扱う
 
 ---
 
@@ -766,6 +830,23 @@ Mobile bearer token の再発行。
 * revision summary
 * archived info
 * current user permissions
+
+### permissions DTO
+
+```json
+{
+  "can_edit": true,
+  "can_share": true,
+  "can_request_review": true,
+  "can_archive": true,
+  "can_revoke_formal": false,
+  "can_formalize": false,
+  "can_review": false,
+  "can_comment": true,
+  "can_add_link": true,
+  "can_create_edit_draft": false
+}
+```
 
 ---
 
@@ -853,6 +934,11 @@ Mobile bearer token の再発行。
   "reason": "..."
 }
 ```
+
+### rules
+
+* `formal -> shared`
+* 理由必須
 
 ---
 
@@ -1176,6 +1262,21 @@ Mobile bearer token の再発行。
 * links
 * permissions
 
+### permissions DTO
+
+```json
+{
+  "can_edit": true,
+  "can_answer": true,
+  "can_accept_answer": false,
+  "can_reopen": false,
+  "can_archive": false,
+  "can_create_knowledge": true,
+  "can_comment": true,
+  "can_add_link": true
+}
+```
+
 ---
 
 ## 11-4. `PATCH /api/questions/{questionId}`
@@ -1256,6 +1357,27 @@ Mobile bearer token の再発行。
 ### 用途
 
 質問履歴一覧取得。
+
+### response
+
+```json
+{
+  "data": {
+    "revisions": [
+      {
+        "id": "uuid",
+        "revision_number": 3,
+        "edited_by": {
+          "id": "uuid",
+          "display_name": "User Name"
+        },
+        "created_at": "2026-04-01T00:00:00Z",
+        "edit_summary": "表現を更新"
+      }
+    ]
+  }
+}
+```
 
 ---
 
@@ -1350,6 +1472,26 @@ Q&A由来ナレッジ作成。
 
 回答履歴一覧取得。
 
+### response
+
+```json
+{
+  "data": {
+    "revisions": [
+      {
+        "id": "uuid",
+        "revision_number": 2,
+        "edited_by": {
+          "id": "uuid",
+          "display_name": "User Name"
+        },
+        "created_at": "2026-04-01T00:00:00Z"
+      }
+    ]
+  }
+}
+```
+
 ---
 
 # 13. comment API
@@ -1389,6 +1531,11 @@ Q&A由来ナレッジ作成。
 
 * コメント投稿者本人のみ
 
+### rules
+
+* `is_edited = true`
+* `edited_at = now()`
+
 ---
 
 ## 13-3. `POST /api/comments/{commentId}/hide`
@@ -1409,6 +1556,11 @@ Q&A由来ナレッジ作成。
   "reason_text": "個人情報が含まれるため非表示"
 }
 ```
+
+### rules
+
+* owner / admin のみ
+* 個別通知は作らない
 
 ---
 
@@ -1546,6 +1698,16 @@ Q&A由来ナレッジ作成。
 
 未読件数取得。
 
+### response
+
+```json
+{
+  "data": {
+    "unread_count": 12
+  }
+}
+```
+
 ---
 
 # 17. review queue API
@@ -1581,6 +1743,18 @@ Q&A由来ナレッジ作成。
 
 * reviewer / admin / owner
 
+### response
+
+```json
+{
+  "data": {
+    "total": 4,
+    "knowledge_count": 3,
+    "knowledge_edit_draft_count": 1
+  }
+}
+```
+
 ---
 
 # 18. search responsibility
@@ -1612,7 +1786,7 @@ MVP の検索責務は一覧 API に含める。
 
 ## 19-3. formal 本体の直接更新禁止
 
-* formal は `PATCH /api/knowledges/{id}` では更新不可
+* formal は `PATCH /api/knowledges/{knowledgeId}` では更新不可
 * 編集下書き経由のみ
 
 ## 19-4. `admin_only`, `owner_only` の visibility
@@ -1686,11 +1860,11 @@ MVP の検索責務は一覧 API に含める。
 | endpoint | affected tables | state rule | side effect | 主な error code |
 | --- | --- | --- | --- | --- |
 | `GET /api/workspace-resolution` | `workspaces`, `workspace_members`, `workspace_join_requests` | read only | login 後の参加導線判定に使う | `UNAUTHENTICATED`, `NOT_FOUND` |
-| `POST /api/auth/google/callback` | `users`, `user_profiles`, `workspace_members` | Google 認証結果に応じて login / signup | Web は session cookie、Mobile は access / refresh token 発行 | `UNAUTHENTICATED`, `DOMAIN_MISMATCH` |
-| `POST /api/auth/refresh` | `user_sessions` または token store | refresh token 有効時のみ再発行 | 新 access token 発行、必要なら rotate | `UNAUTHENTICATED`, `EXPIRED` |
-| `POST /api/auth/logout` | `user_sessions` または token store | active session のみ無効化 | session / refresh token 失効 | `UNAUTHENTICATED` |
+| `POST /api/auth/google/callback` | `users`, `user_sessions`, `workspace_members` | Google 認証結果に応じて login / signup | Web は session cookie、Mobile は access / refresh token 発行 | `UNAUTHENTICATED`, `DOMAIN_MISMATCH` |
+| `POST /api/auth/refresh` | `user_sessions` | refresh token 有効時のみ再発行 | 新 access token 発行、必要なら rotate | `UNAUTHENTICATED`, `EXPIRED` |
+| `POST /api/auth/logout` | `user_sessions` | active session のみ無効化 | session / refresh token 失効 | `UNAUTHENTICATED` |
 | `POST /api/workspaces` | `workspaces`, `workspace_members`, `workspace_membership_logs` | 同一 domain workspace 未作成時のみ | 作成者を owner で追加 | `VALIDATION_ERROR`, `DOMAIN_MISMATCH` |
-| `POST /api/workspaces/current/invitations` | `workspace_invitations` | owner / admin のみ | 招待 token 発行、必要なら通知基盤へ連携 | `FORBIDDEN`, `VALIDATION_ERROR`, `DOMAIN_MISMATCH` |
+| `POST /api/workspaces/current/invitations` | `workspace_invitations` | owner / admin のみ | 招待 token 発行、transactional email 送信依頼 | `FORBIDDEN`, `VALIDATION_ERROR`, `DOMAIN_MISMATCH` |
 | `POST /api/workspace-invitations/{invitationId}/revoke` | `workspace_invitations` | `pending` のみ `revoked` | 招待リンク無効化 | `FORBIDDEN`, `STATE_CONFLICT`, `NOT_FOUND` |
 | `GET /api/workspace-invitations/{token}` | `workspace_invitations`, `workspaces` | read only | 招待 preview 表示 | `FORBIDDEN`, `NOT_FOUND`, `EXPIRED` |
 | `POST /api/workspace-invitations/{invitationId}/resend` | `workspace_invitations` | 旧 `pending` を `revoked`、新 `pending` を追加 | 新 token / 新 expiry 発行 | `FORBIDDEN`, `STATE_CONFLICT`, `NOT_FOUND` |
@@ -1713,7 +1887,7 @@ MVP の検索責務は一覧 API に含める。
 | `POST /api/knowledges/{knowledgeId}/reviews` | `knowledge_reviews`, `notifications` | `review_requested` のみ | approve / comment / request_changes を記録、changes requested は投稿者通知 | `FORBIDDEN`, `STATE_CONFLICT`, `VALIDATION_ERROR` |
 | `POST /api/knowledges/{knowledgeId}/formalize` | `knowledge_items`, `knowledge_reviews`, `notifications` | `review_requested -> formal` | `formalized_at` / `formalized_by_user_id` 記録、正式化通知 | `FORBIDDEN`, `STATE_CONFLICT`, `VALIDATION_ERROR` |
 | `POST /api/knowledges/{knowledgeId}/archive` | `knowledge_items` | 非 formal または admin / owner に許可された対象のみ | `archived_at` / `archive_reason` 記録 | `FORBIDDEN`, `STATE_CONFLICT`, `VALIDATION_ERROR` |
-| `POST /api/knowledges/{knowledgeId}/revoke-formal` | `knowledge_items`, `notifications` | `formal -> archived` | 正式取り下げ理由記録、投稿者通知 | `FORBIDDEN`, `STATE_CONFLICT`, `VALIDATION_ERROR` |
+| `POST /api/knowledges/{knowledgeId}/revoke-formal` | `knowledge_items`, `knowledge_revisions`, `notifications` | `formal -> shared` | 正式取り下げ理由記録、投稿者通知 | `FORBIDDEN`, `STATE_CONFLICT`, `VALIDATION_ERROR` |
 | `POST /api/knowledges/{knowledgeId}/draft-visibility` | `knowledge_items` | `status = draft` のみ | 通知なし | `FORBIDDEN`, `STATE_CONFLICT`, `VALIDATION_ERROR` |
 | `POST /api/knowledges/{knowledgeId}/edit-drafts` | `knowledge_edit_drafts`, `knowledge_edit_draft_revisions`, `knowledge_edit_draft_tags` | formal knowledge に対して未完了 draft 1 件まで | edit draft revision 1 作成 | `FORBIDDEN`, `STATE_CONFLICT`, `VALIDATION_ERROR` |
 | `PATCH /api/knowledge-edit-drafts/{draftId}` | `knowledge_edit_drafts`, `knowledge_edit_draft_revisions`, `knowledge_edit_draft_tags` | `review_requested` / `changes_requested` で保存したら `shared` | draft revision 追加、tag 再同期 | `FORBIDDEN`, `STATE_CONFLICT`, `VALIDATION_ERROR` |
@@ -1742,8 +1916,8 @@ MVP の検索責務は一覧 API に含める。
 | endpoint | affected tables | state rule | side effect | 主な error code |
 | --- | --- | --- | --- | --- |
 | `POST /api/comments` | `comments`, `notifications` | parent depth 2 まで | mention / reply 通知 | `FORBIDDEN`, `VALIDATION_ERROR` |
-| `PATCH /api/comments/{commentId}` | `comments` | 本人のみ更新可 | `is_edited = true` | `FORBIDDEN`, `STATE_CONFLICT` |
-| `POST /api/comments/{commentId}/hide` | `comments`, `notifications` | admin / owner または本人 | moderation 記録 | `FORBIDDEN`, `STATE_CONFLICT` |
+| `PATCH /api/comments/{commentId}` | `comments` | 本人のみ更新可 | `is_edited = true`, `edited_at` 更新 | `FORBIDDEN`, `STATE_CONFLICT` |
+| `POST /api/comments/{commentId}/hide` | `comments` | admin / owner のみ | moderation 記録 | `FORBIDDEN`, `STATE_CONFLICT` |
 | `POST /api/content-links` | `content_links` | visibility と link 権限を満たす場合のみ | 重複禁止、自己リンク禁止 | `FORBIDDEN`, `VALIDATION_ERROR` |
 | `DELETE /api/content-links/{linkId}` | `content_links` | 作成者または admin / owner | link 削除 | `FORBIDDEN`, `NOT_FOUND` |
 | `POST /api/bookmarks` | `bookmarks` | 自分のみ | 重複 bookmark 禁止 | `FORBIDDEN`, `VALIDATION_ERROR` |
