@@ -2395,6 +2395,7 @@ MVP の検索責務は一覧 API に含める。
 * `can_add_link`
 * `can_create_edit_draft`
 * `can_change_draft_visibility`
+* `can_bookmark`
 
 ### `knowledge edit draft permissions DTO`
 
@@ -2417,6 +2418,7 @@ MVP の検索責務は一覧 API に含める。
 * `can_create_knowledge`
 * `can_comment`
 * `can_add_link`
+* `can_bookmark`
 
 ### `answer permissions DTO`
 
