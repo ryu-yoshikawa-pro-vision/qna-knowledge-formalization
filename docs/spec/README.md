@@ -1,6 +1,6 @@
 # Full-Stack Handoff README
 
-この `spec/` は、**元の会話ログや補足資料を読まなくても**、未知の Codex が Backend / Web / Mobile を一から実装開始できるように再編した handoff パックです。
+この `spec/` は、 Codex が Backend / Web / Mobile を一から実装開始できるように再編した handoff パックです。
 
 ## 1. このディレクトリの使い方
 
