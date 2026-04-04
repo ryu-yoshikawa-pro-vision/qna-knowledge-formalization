@@ -1,0 +1,579 @@
+<!doctype html>
+
+<html class="light" lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>レビュー待ちリスト - Knowledge Infrastructure</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Manrope:wght@700;800&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary-fixed": "#d6e3ff",
+              "tertiary-fixed-dim": "#f2bc82",
+              surface: "#f7f9fb",
+              "primary-fixed-dim": "#adc7f7",
+              "on-tertiary-container": "#c6955e",
+              "on-secondary-fixed-variant": "#3e4758",
+              "surface-container-low": "#f2f4f6",
+              secondary: "#555f70",
+              "on-surface-variant": "#43474e",
+              "secondary-container": "#d9e3f8",
+              "surface-container": "#eceef0",
+              "on-tertiary-fixed": "#2b1700",
+              outline: "#74777f",
+              background: "#f7f9fb",
+              "on-tertiary": "#ffffff",
+              "surface-container-high": "#e6e8ea",
+              "inverse-surface": "#2d3133",
+              error: "#ba1a1a",
+              tertiary: "#321b00",
+              "on-background": "#191c1e",
+              "on-primary-fixed": "#001b3c",
+              "on-primary-fixed-variant": "#2d476f",
+              "primary-container": "#1a365d",
+              "error-container": "#ffdad6",
+              "on-error": "#ffffff",
+              "surface-bright": "#f7f9fb",
+              "inverse-primary": "#adc7f7",
+              "on-error-container": "#93000a",
+              "on-tertiary-fixed-variant": "#633f0f",
+              "surface-dim": "#d8dadc",
+              "surface-container-highest": "#e0e3e5",
+              "tertiary-container": "#4f2e00",
+              "tertiary-fixed": "#ffddba",
+              "on-secondary": "#ffffff",
+              "on-surface": "#191c1e",
+              primary: "#002045",
+              "inverse-on-surface": "#eff1f3",
+              "secondary-fixed": "#d9e3f8",
+              "surface-container-lowest": "#ffffff",
+              "on-secondary-container": "#5b6577",
+              "outline-variant": "#c4c6cf",
+              "on-primary-container": "#86a0cd",
+              "on-secondary-fixed": "#121c2b",
+              "surface-variant": "#e0e3e5",
+              "surface-tint": "#455f88",
+              "secondary-fixed-dim": "#bdc7db",
+              "on-primary": "#ffffff",
+            },
+            borderRadius: {
+              DEFAULT: "0.125rem",
+              lg: "0.25rem",
+              xl: "0.5rem",
+              full: "0.75rem",
+            },
+            fontFamily: {
+              headline: ["Manrope"],
+              body: ["Inter"],
+              label: ["Inter"],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      .font-headline {
+        font-family: "Manrope", sans-serif;
+      }
+      .material-symbols-outlined {
+        font-variation-settings:
+          "FILL" 0,
+          "wght" 400,
+          "GRAD" 0,
+          "opsz" 24;
+      }
+    </style>
+  </head>
+  <body class="bg-background text-on-surface">
+    <!-- SideNavBar Shell -->
+    <aside
+      class="fixed left-0 top-0 h-full flex flex-col py-4 z-40 bg-blue-950 dark:bg-slate-950 w-64 shadow-xl shadow-blue-900/10"
+    >
+      <div class="px-6 mb-8">
+        <div class="flex items-center gap-3">
+          <div
+            class="w-8 h-8 rounded bg-primary-fixed-dim flex items-center justify-center"
+          >
+            <span
+              class="material-symbols-outlined text-primary"
+              data-icon="architecture"
+              >architecture</span
+            >
+          </div>
+          <div>
+            <h1 class="text-lg font-bold text-white font-headline">知識基盤</h1>
+            <p
+              class="text-[0.6875rem] font-semibold text-blue-200/70 tracking-wider"
+            >
+              Enterprise KM
+            </p>
+          </div>
+        </div>
+      </div>
+      <nav class="flex-1 space-y-1">
+        <a
+          class="flex items-center gap-3 px-4 py-3 text-blue-200/70 hover:text-white mx-2 hover:bg-blue-800/40 rounded-lg transition-all"
+          href="#"
+        >
+          <span class="material-symbols-outlined" data-icon="menu_book"
+            >menu_book</span
+          >
+          <span class="text-[0.875rem] font-medium">知識</span>
+        </a>
+        <a
+          class="flex items-center gap-3 px-4 py-3 text-blue-200/70 hover:text-white mx-2 hover:bg-blue-800/40 rounded-lg transition-all"
+          href="#"
+        >
+          <span class="material-symbols-outlined" data-icon="quiz">quiz</span>
+          <span class="text-[0.875rem] font-medium">質問</span>
+        </a>
+        <a
+          class="flex items-center gap-3 px-4 py-3 text-blue-200/70 hover:text-white mx-2 hover:bg-blue-800/40 rounded-lg transition-all"
+          href="#"
+        >
+          <span class="material-symbols-outlined" data-icon="bookmark"
+            >bookmark</span
+          >
+          <span class="text-[0.875rem] font-medium">ブックマーク</span>
+        </a>
+        <a
+          class="flex items-center gap-3 px-4 py-3 text-blue-200/70 hover:text-white mx-2 hover:bg-blue-800/40 rounded-lg transition-all"
+          href="#"
+        >
+          <span class="material-symbols-outlined" data-icon="notifications"
+            >notifications</span
+          >
+          <span class="text-[0.875rem] font-medium">通知</span>
+        </a>
+        <!-- Active Tab: 管理者設定 (Maps to Review Queue/Management context) -->
+        <a
+          class="flex items-center gap-3 px-4 py-3 bg-blue-800 text-white rounded-lg mx-2 translate-x-1 transition-transform"
+          href="#"
+        >
+          <span class="material-symbols-outlined" data-icon="settings_suggest"
+            >settings_suggest</span
+          >
+          <span class="text-[0.875rem] font-medium">管理者設定</span>
+        </a>
+      </nav>
+      <div class="px-4 mt-auto">
+        <button
+          class="w-full py-3 bg-white/10 hover:bg-white/20 text-white rounded-xl font-semibold text-sm transition-colors flex items-center justify-center gap-2"
+        >
+          <span class="material-symbols-outlined text-sm" data-icon="add"
+            >add</span
+          >
+          新規作成
+        </button>
+      </div>
+    </aside>
+    <!-- Main Content Area -->
+    <main class="ml-64 min-h-screen">
+      <!-- TopAppBar Shell -->
+      <header
+        class="flex justify-between items-center px-8 h-16 w-full bg-slate-50 dark:bg-slate-900 sticky top-0 z-30"
+      >
+        <div class="flex items-center gap-8">
+          <span
+            class="text-xl font-bold tracking-tight text-blue-900 font-headline"
+            >Knowledge Infrastructure</span
+          >
+          <div class="hidden md:flex items-center gap-6">
+            <a
+              class="text-blue-900 font-semibold border-b-2 border-blue-900 text-sm py-5"
+              href="#"
+              >ワークスペース</a
+            >
+          </div>
+        </div>
+        <div class="flex items-center gap-4">
+          <button
+            class="p-2 text-slate-500 hover:bg-slate-200/50 rounded-full transition-colors"
+          >
+            <span class="material-symbols-outlined" data-icon="notifications"
+              >notifications</span
+            >
+          </button>
+          <button
+            class="p-2 text-slate-500 hover:bg-slate-200/50 rounded-full transition-colors"
+          >
+            <span class="material-symbols-outlined" data-icon="rate_review"
+              >rate_review</span
+            >
+          </button>
+          <div
+            class="h-8 w-8 rounded-full bg-surface-container-highest overflow-hidden"
+          >
+            <img
+              alt="User avatar"
+              class="w-full h-full object-cover"
+              data-alt="professional headshot of a person in a corporate setting with soft natural office lighting"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuBJNxnyLfQgEb4QymguB1F2lpTkDl611L6Z0_drCNlsR_TdnqDP_Buo6SyrR9jrsaHMY2gS9grTJSt8_FulgnuUv43fCs9lTgldbGI3Q7ihelOdGgY9dmHBMrDZ6CnsI65gGfTWFefgVE-AaKzAFIEBvS_ulnvcCQe84S9BFreUhGR4AjpiMWI-oV9n1QOqqTM5pLuqtoiAQry0hI1n03vckE8olmESBM1ahRrSEDlLMt_KrQziAXQVlSYOO3Foow_2U2dls16HB9M"
+            />
+          </div>
+        </div>
+      </header>
+      <!-- Page Canvas -->
+      <div class="p-8 max-w-7xl mx-auto">
+        <!-- Header Section -->
+        <div
+          class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4"
+        >
+          <div>
+            <h2
+              class="text-[2.0rem] font-bold text-primary font-headline leading-tight"
+            >
+              レビュー待ちリスト
+            </h2>
+            <p class="text-on-surface-variant mt-2 max-w-2xl">
+              未承認のコンテンツおよび編集案を管理します。承認または修正のフィードバックを行ってください。
+            </p>
+          </div>
+          <div class="flex items-center gap-3">
+            <div
+              class="flex items-center bg-surface-container-low rounded-lg p-1"
+            >
+              <button
+                class="px-4 py-2 text-sm font-medium bg-surface-container-lowest shadow-sm rounded-md text-primary"
+              >
+                全アイテム
+              </button>
+              <button
+                class="px-4 py-2 text-sm font-medium text-on-surface-variant hover:text-primary transition-colors"
+              >
+                自分の担当
+              </button>
+            </div>
+          </div>
+        </div>
+        <!-- Operational Filters -->
+        <div class="bg-surface-container-lowest rounded-xl p-6 mb-8 shadow-sm">
+          <div
+            class="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-5 gap-6 items-end"
+          >
+            <div class="space-y-2">
+              <label
+                class="text-[0.6875rem] font-semibold text-on-surface-variant uppercase tracking-wider"
+                >アイテムタイプ</label
+              >
+              <select
+                class="w-full bg-surface-container-low border-none rounded-lg text-sm py-2.5 px-4 focus:ring-2 focus:ring-primary/20"
+              >
+                <option>すべて</option>
+                <option>ナレッジ</option>
+                <option>編集案</option>
+              </select>
+            </div>
+            <div class="space-y-2">
+              <label
+                class="text-[0.6875rem] font-semibold text-on-surface-variant uppercase tracking-wider"
+                >作成者</label
+              >
+              <input
+                class="w-full bg-surface-container-low border-none rounded-lg text-sm py-2.5 px-4 focus:ring-2 focus:ring-primary/20"
+                placeholder="名前で検索..."
+                type="text"
+              />
+            </div>
+            <div class="space-y-2">
+              <label
+                class="text-[0.6875rem] font-semibold text-on-surface-variant uppercase tracking-wider"
+                >タグ</label
+              >
+              <select
+                class="w-full bg-surface-container-low border-none rounded-lg text-sm py-2.5 px-4 focus:ring-2 focus:ring-primary/20"
+              >
+                <option>すべてのタグ</option>
+                <option>セキュリティ</option>
+                <option>プロジェクト管理</option>
+              </select>
+            </div>
+            <div class="space-y-2">
+              <label
+                class="text-[0.6875rem] font-semibold text-on-surface-variant uppercase tracking-wider"
+                >ソース</label
+              >
+              <select
+                class="w-full bg-surface-container-low border-none rounded-lg text-sm py-2.5 px-4 focus:ring-2 focus:ring-primary/20"
+              >
+                <option>すべて</option>
+                <option>直接投稿</option>
+                <option>Q&amp;A由来</option>
+              </select>
+            </div>
+            <div class="flex items-center gap-2">
+              <button
+                class="flex-1 bg-primary text-white text-sm font-semibold py-2.5 rounded-lg hover:opacity-90 transition-opacity"
+              >
+                適用
+              </button>
+              <button
+                class="p-2.5 text-on-surface-variant hover:bg-surface-container-high rounded-lg transition-colors"
+              >
+                <span class="material-symbols-outlined" data-icon="refresh"
+                  >refresh</span
+                >
+              </button>
+            </div>
+          </div>
+        </div>
+        <!-- List Controls -->
+        <div class="flex items-center justify-between mb-4 px-2">
+          <span class="text-sm font-medium text-on-surface-variant"
+            >2 件のアイテムを表示中</span
+          >
+          <div class="flex items-center gap-2">
+            <span
+              class="text-[0.6875rem] font-semibold text-on-surface-variant uppercase"
+              >並び替え:</span
+            >
+            <select
+              class="bg-transparent border-none text-sm font-semibold text-primary focus:ring-0 cursor-pointer"
+            >
+              <option>新しい順</option>
+              <option>古い順</option>
+            </select>
+          </div>
+        </div>
+        <!-- Queue Items List -->
+        <div class="space-y-4">
+          <!-- Item 1 -->
+          <div
+            class="bg-surface-container-lowest rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow group"
+          >
+            <div class="flex flex-col lg:flex-row lg:items-center gap-6">
+              <div class="flex-1">
+                <div class="flex items-center gap-3 mb-2">
+                  <span
+                    class="px-2.5 py-0.5 rounded bg-primary-fixed text-on-primary-fixed text-[0.6875rem] font-semibold"
+                    >新規ナレッジ</span
+                  >
+                  <span class="text-[0.6875rem] text-on-surface-variant"
+                    >#3284</span
+                  >
+                </div>
+                <h3
+                  class="text-lg font-bold text-primary mb-2 group-hover:text-blue-700 transition-colors"
+                >
+                  プロジェクト管理ツールの利用ガイド
+                </h3>
+                <div class="flex flex-wrap items-center gap-y-2 gap-x-6">
+                  <div
+                    class="flex items-center gap-2 text-sm text-on-surface-variant"
+                  >
+                    <span
+                      class="material-symbols-outlined text-[1.125rem]"
+                      data-icon="person"
+                      >person</span
+                    >
+                    <span>佐藤 花子</span>
+                  </div>
+                  <div
+                    class="flex items-center gap-2 text-sm text-on-surface-variant"
+                  >
+                    <span
+                      class="material-symbols-outlined text-[1.125rem]"
+                      data-icon="input"
+                      >input</span
+                    >
+                    <span>直接投稿</span>
+                  </div>
+                  <div
+                    class="flex items-center gap-2 text-sm text-on-surface-variant"
+                  >
+                    <span
+                      class="material-symbols-outlined text-[1.125rem]"
+                      data-icon="schedule"
+                      >schedule</span
+                    >
+                    <span>2時間前</span>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="flex items-center gap-6 lg:border-l lg:border-surface-container-high lg:pl-6"
+              >
+                <div class="flex flex-col items-center">
+                  <span
+                    class="text-[0.6875rem] font-semibold text-on-surface-variant uppercase mb-1"
+                    >ステータス</span
+                  >
+                  <span
+                    class="flex items-center gap-1.5 text-tertiary-container font-bold text-xs bg-tertiary-fixed rounded-full px-3 py-1"
+                  >
+                    <span
+                      class="w-2 h-2 rounded-full bg-on-tertiary-container"
+                    ></span>
+                    レビュー待ち
+                  </span>
+                </div>
+                <button
+                  class="bg-primary text-white px-6 py-2.5 rounded-lg text-sm font-semibold hover:bg-primary-container transition-all flex items-center gap-2"
+                >
+                  レビューを開始
+                  <span
+                    class="material-symbols-outlined text-sm"
+                    data-icon="arrow_forward"
+                    >arrow_forward</span
+                  >
+                </button>
+              </div>
+            </div>
+          </div>
+          <!-- Item 2 -->
+          <div
+            class="bg-surface-container-lowest rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow group"
+          >
+            <div class="flex flex-col lg:flex-row lg:items-center gap-6">
+              <div class="flex-1">
+                <div class="flex items-center gap-3 mb-2">
+                  <span
+                    class="px-2.5 py-0.5 rounded bg-secondary-container text-on-secondary-container text-[0.6875rem] font-semibold"
+                    >編集案</span
+                  >
+                  <span class="text-[0.6875rem] text-on-surface-variant"
+                    >#3285</span
+                  >
+                </div>
+                <h3
+                  class="text-lg font-bold text-primary mb-2 group-hover:text-blue-700 transition-colors"
+                >
+                  [編集案] セキュリティポリシー2024
+                </h3>
+                <div class="flex flex-wrap items-center gap-y-2 gap-x-6">
+                  <div
+                    class="flex items-center gap-2 text-sm text-on-surface-variant"
+                  >
+                    <span
+                      class="material-symbols-outlined text-[1.125rem]"
+                      data-icon="person"
+                      >person</span
+                    >
+                    <span>鈴木 一郎</span>
+                  </div>
+                  <div
+                    class="flex items-center gap-2 text-sm text-on-surface-variant"
+                  >
+                    <span
+                      class="material-symbols-outlined text-[1.125rem]"
+                      data-icon="history_edu"
+                      >history_edu</span
+                    >
+                    <span>既存ナレッジの更新</span>
+                  </div>
+                  <div
+                    class="flex items-center gap-2 text-sm text-on-surface-variant"
+                  >
+                    <span
+                      class="material-symbols-outlined text-[1.125rem]"
+                      data-icon="schedule"
+                      >schedule</span
+                    >
+                    <span>5時間前</span>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="flex items-center gap-6 lg:border-l lg:border-surface-container-high lg:pl-6"
+              >
+                <div class="flex flex-col items-center">
+                  <span
+                    class="text-[0.6875rem] font-semibold text-on-surface-variant uppercase mb-1"
+                    >ステータス</span
+                  >
+                  <span
+                    class="flex items-center gap-1.5 text-tertiary-container font-bold text-xs bg-tertiary-fixed rounded-full px-3 py-1"
+                  >
+                    <span
+                      class="w-2 h-2 rounded-full bg-on-tertiary-container"
+                    ></span>
+                    レビュー待ち
+                  </span>
+                </div>
+                <button
+                  class="bg-primary text-white px-6 py-2.5 rounded-lg text-sm font-semibold hover:bg-primary-container transition-all flex items-center gap-2"
+                >
+                  レビューを開始
+                  <span
+                    class="material-symbols-outlined text-sm"
+                    data-icon="arrow_forward"
+                    >arrow_forward</span
+                  >
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Empty State Concept (Hidden) -->
+        <div
+          class="hidden flex-col items-center justify-center py-24 text-center"
+        >
+          <div
+            class="w-24 h-24 bg-surface-container rounded-full flex items-center justify-center mb-6"
+          >
+            <span
+              class="material-symbols-outlined text-4xl text-on-surface-variant"
+              data-icon="check_circle"
+              >check_circle</span
+            >
+          </div>
+          <h3 class="text-xl font-bold text-primary mb-2">
+            すべて完了しました
+          </h3>
+          <p class="text-on-surface-variant">
+            レビュー待ちのアイテムは現在ありません。
+          </p>
+        </div>
+        <!-- Footer Meta -->
+        <div
+          class="mt-12 pt-8 border-t border-surface-container-high flex flex-col md:flex-row justify-between gap-4 text-on-surface-variant"
+        >
+          <div
+            class="flex items-center gap-4 text-[0.6875rem] font-semibold uppercase tracking-wider"
+          >
+            <span class="flex items-center gap-1">
+              <span class="w-2 h-2 bg-primary rounded-full"></span>
+              稼働中
+            </span>
+            <span>サーバー負荷: 低</span>
+            <span>最終更新: 14:32</span>
+          </div>
+          <div class="flex items-center gap-6 text-xs font-medium">
+            <a class="hover:text-primary transition-colors" href="#"
+              >利用規約</a
+            >
+            <a class="hover:text-primary transition-colors" href="#"
+              >プライバシーポリシー</a
+            >
+            <a class="hover:text-primary transition-colors" href="#"
+              >ヘルプセンター</a
+            >
+          </div>
+        </div>
+      </div>
+    </main>
+    <!-- Contextual FAB (Suppressed on management screen as per policy, but kept as comment for hierarchy reference) -->
+    <!-- <button class="fixed bottom-8 right-8 w-14 h-14 bg-primary text-white rounded-full shadow-xl flex items-center justify-center hover:scale-105 transition-transform z-50">
+        <span class="material-symbols-outlined" data-icon="add">add</span>
+    </button> -->
+  </body>
+</html>

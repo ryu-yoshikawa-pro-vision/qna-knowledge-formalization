@@ -1,0 +1,506 @@
+<!doctype html>
+
+<html class="light" lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Manrope:wght@700;800&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary-fixed": "#d6e3ff",
+              "tertiary-fixed-dim": "#f2bc82",
+              surface: "#f7f9fb",
+              "primary-fixed-dim": "#adc7f7",
+              "on-tertiary-container": "#c6955e",
+              "on-secondary-fixed-variant": "#3e4758",
+              "surface-container-low": "#f2f4f6",
+              secondary: "#555f70",
+              "on-surface-variant": "#43474e",
+              "secondary-container": "#d9e3f8",
+              "surface-container": "#eceef0",
+              "on-tertiary-fixed": "#2b1700",
+              outline: "#74777f",
+              background: "#f7f9fb",
+              "on-tertiary": "#ffffff",
+              "surface-container-high": "#e6e8ea",
+              "inverse-surface": "#2d3133",
+              error: "#ba1a1a",
+              tertiary: "#321b00",
+              "on-background": "#191c1e",
+              "on-primary-fixed": "#001b3c",
+              "on-primary-fixed-variant": "#2d476f",
+              "primary-container": "#1a365d",
+              "error-container": "#ffdad6",
+              "on-error": "#ffffff",
+              "surface-bright": "#f7f9fb",
+              "inverse-primary": "#adc7f7",
+              "on-error-container": "#93000a",
+              "on-tertiary-fixed-variant": "#633f0f",
+              "surface-dim": "#d8dadc",
+              "surface-container-highest": "#e0e3e5",
+              "tertiary-container": "#4f2e00",
+              "tertiary-fixed": "#ffddba",
+              "on-secondary": "#ffffff",
+              "on-surface": "#191c1e",
+              primary: "#002045",
+              "inverse-on-surface": "#eff1f3",
+              "secondary-fixed": "#d9e3f8",
+              "surface-container-lowest": "#ffffff",
+              "on-secondary-container": "#5b6577",
+              "outline-variant": "#c4c6cf",
+              "on-primary-container": "#86a0cd",
+              "on-secondary-fixed": "#121c2b",
+              "surface-variant": "#e0e3e5",
+              "surface-tint": "#455f88",
+              "secondary-fixed-dim": "#bdc7db",
+              "on-primary": "#ffffff",
+            },
+            borderRadius: {
+              DEFAULT: "0.125rem",
+              lg: "0.25rem",
+              xl: "0.5rem",
+              full: "0.75rem",
+            },
+            fontFamily: {
+              headline: ["Manrope"],
+              body: ["Inter"],
+              label: ["Inter"],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      .material-symbols-outlined {
+        font-variation-settings:
+          "FILL" 0,
+          "wght" 400,
+          "GRAD" 0,
+          "opsz" 24;
+        vertical-align: middle;
+      }
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      h1,
+      h2,
+      .font-headline {
+        font-family: "Manrope", sans-serif;
+      }
+    </style>
+  </head>
+  <body class="bg-background text-on-background min-h-screen flex">
+    <!-- SideNavBar (Shared Component) -->
+    <aside
+      class="fixed left-0 top-0 h-full flex flex-col py-4 z-40 bg-blue-950 dark:bg-slate-950 text-white w-64 shadow-xl shadow-blue-900/10"
+    >
+      <div class="px-6 mb-8 flex items-center gap-3">
+        <div
+          class="w-8 h-8 rounded bg-primary-fixed flex items-center justify-center"
+        >
+          <span
+            class="material-symbols-outlined text-primary"
+            data-icon="menu_book"
+            >menu_book</span
+          >
+        </div>
+        <div>
+          <div class="text-lg font-bold text-white leading-tight">知識基盤</div>
+          <div class="text-[10px] uppercase tracking-widest text-blue-200/50">
+            Enterprise KM
+          </div>
+        </div>
+      </div>
+      <nav class="flex-1 space-y-1">
+        <a
+          class="flex items-center gap-3 py-3 px-6 text-blue-200/70 hover:text-white hover:bg-blue-800/40 rounded-lg mx-2 transition-all"
+          href="#"
+        >
+          <span class="material-symbols-outlined" data-icon="menu_book"
+            >menu_book</span
+          >
+          <span class="text-[0.6875rem] font-semibold">知識</span>
+        </a>
+        <!-- Active Tab: 質問一覧 (Question List) -->
+        <a
+          class="flex items-center gap-3 py-3 px-6 bg-blue-800 text-white rounded-lg mx-2 translate-x-1 transition-transform"
+          href="#"
+        >
+          <span class="material-symbols-outlined" data-icon="quiz">quiz</span>
+          <span class="text-[0.6875rem] font-semibold">質問</span>
+        </a>
+        <a
+          class="flex items-center gap-3 py-3 px-6 text-blue-200/70 hover:text-white hover:bg-blue-800/40 rounded-lg mx-2 transition-all"
+          href="#"
+        >
+          <span class="material-symbols-outlined" data-icon="bookmark"
+            >bookmark</span
+          >
+          <span class="text-[0.6875rem] font-semibold">ブックマーク</span>
+        </a>
+        <a
+          class="flex items-center gap-3 py-3 px-6 text-blue-200/70 hover:text-white hover:bg-blue-800/40 rounded-lg mx-2 transition-all"
+          href="#"
+        >
+          <span class="material-symbols-outlined" data-icon="notifications"
+            >notifications</span
+          >
+          <span class="text-[0.6875rem] font-semibold">通知</span>
+        </a>
+        <a
+          class="flex items-center gap-3 py-3 px-6 text-blue-200/70 hover:text-white hover:bg-blue-800/40 rounded-lg mx-2 transition-all mt-auto"
+          href="#"
+        >
+          <span class="material-symbols-outlined" data-icon="settings_suggest"
+            >settings_suggest</span
+          >
+          <span class="text-[0.6875rem] font-semibold">管理者設定</span>
+        </a>
+      </nav>
+      <div class="px-4 mt-6">
+        <button
+          class="w-full bg-primary-fixed text-on-primary-fixed py-3 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-white transition-colors"
+        >
+          <span class="material-symbols-outlined" data-icon="add">add</span>
+          新規作成
+        </button>
+      </div>
+    </aside>
+    <!-- Main Canvas -->
+    <main class="flex-1 ml-64 min-h-screen flex flex-col">
+      <!-- TopNavBar (Shared Component) -->
+      <header
+        class="flex justify-between items-center px-8 h-16 w-full bg-slate-50 dark:bg-slate-900 sticky top-0 z-30"
+      >
+        <div class="flex items-center gap-8">
+          <div class="relative group">
+            <span
+              class="absolute inset-y-0 left-3 flex items-center text-slate-400"
+            >
+              <span class="material-symbols-outlined text-sm" data-icon="search"
+                >search</span
+              >
+            </span>
+            <input
+              class="pl-10 pr-4 py-2 bg-surface-container-low border-none rounded-full text-sm w-64 focus:ring-2 focus:ring-primary/20 transition-all"
+              placeholder="キーワードで検索..."
+              type="text"
+            />
+          </div>
+          <div class="flex items-center gap-6">
+            <a
+              class="text-blue-900 dark:text-blue-100 font-semibold border-b-2 border-blue-900 py-5 transition-colors"
+              href="#"
+              >ワークスペース</a
+            >
+          </div>
+        </div>
+        <div class="flex items-center gap-4">
+          <button
+            class="p-2 text-slate-500 hover:bg-slate-200/50 rounded-full transition-colors"
+          >
+            <span class="material-symbols-outlined" data-icon="notifications"
+              >notifications</span
+            >
+          </button>
+          <button
+            class="p-2 text-slate-500 hover:bg-slate-200/50 rounded-full transition-colors"
+          >
+            <span class="material-symbols-outlined" data-icon="rate_review"
+              >rate_review</span
+            >
+          </button>
+          <div class="w-8 h-8 rounded-full overflow-hidden ml-2 bg-slate-200">
+            <img
+              alt="User avatar"
+              class="w-full h-full object-cover"
+              data-alt="Professional headshot of a person in a minimalist setting with soft natural light"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuCnoheYQ48qTWbBHknwRTLIwwo0XaRvmtKgJaSUJAWHchAKWlv7VaaMZFfyZboKSDnGwtl64x5Ci4igI2az7ZXV5cg8Z36hB1Sy-Bjb0QMN-RbyqjLNi18R8pkxMaN4Z5OYkZJ2-yKKZlFpjA0RGPW3ESJVk_0aocx8-1BKbHl6UyUkzZBBAtFgjrZAqRk7PS4dx-NQDEGwaWwndLACUXX94regrjZkD05xQAxVBOD6eZ46IKbp0yMvn_r-T-mIi_P_lrFa9GO55k8"
+            />
+          </div>
+        </div>
+      </header>
+      <!-- Content Area -->
+      <div class="px-10 py-10 max-w-6xl w-full mx-auto space-y-12">
+        <!-- Page Header -->
+        <section class="space-y-2">
+          <h1
+            class="text-[2.0rem] font-extrabold tracking-tight text-primary leading-tight"
+          >
+            質問一覧
+          </h1>
+          <p class="text-secondary leading-relaxed text-sm">
+            社内の疑問を解消し、知見を共有しましょう。
+          </p>
+        </section>
+        <!-- Discovery / Search & Filter Section -->
+        <section class="bg-surface-container-low p-6 rounded-xl space-y-6">
+          <div class="flex flex-wrap items-center gap-4">
+            <div class="flex-1 min-w-[300px]">
+              <div class="relative">
+                <input
+                  class="w-full bg-surface-container-lowest border-none py-3 px-4 rounded-xl shadow-sm focus:ring-2 focus:ring-primary/10"
+                  placeholder="タイトル、タグ、内容で検索..."
+                  type="text"
+                />
+              </div>
+            </div>
+            <div
+              class="flex items-center gap-2 bg-surface-container-lowest p-1 rounded-xl shadow-sm"
+            >
+              <button
+                class="px-4 py-2 text-xs font-semibold rounded-lg bg-primary text-white"
+              >
+                すべて
+              </button>
+              <button
+                class="px-4 py-2 text-xs font-semibold rounded-lg text-secondary hover:bg-surface-container-low"
+              >
+                未解決
+              </button>
+              <button
+                class="px-4 py-2 text-xs font-semibold rounded-lg text-secondary hover:bg-surface-container-low"
+              >
+                解決済み
+              </button>
+              <button
+                class="px-4 py-2 text-xs font-semibold rounded-lg text-secondary hover:bg-surface-container-low"
+              >
+                アーカイブ
+              </button>
+            </div>
+            <button
+              class="flex items-center gap-2 px-4 py-2.5 bg-surface-container-lowest border-none rounded-xl text-xs font-bold text-primary shadow-sm hover:bg-white transition-all"
+            >
+              <span
+                class="material-symbols-outlined text-sm"
+                data-icon="filter_list"
+                >filter_list</span
+              >
+              詳細フィルタ
+            </button>
+          </div>
+          <!-- Popular Tags -->
+          <div class="flex items-center gap-3">
+            <span
+              class="text-[0.6875rem] font-bold text-secondary uppercase tracking-widest"
+              >人気のタグ:</span
+            >
+            <div class="flex gap-2">
+              <span
+                class="px-3 py-1 bg-white rounded-full text-[0.6875rem] font-semibold text-primary-container border border-primary/5 cursor-pointer hover:bg-primary hover:text-white transition-all"
+                >#Slack</span
+              >
+              <span
+                class="px-3 py-1 bg-white rounded-full text-[0.6875rem] font-semibold text-primary-container border border-primary/5 cursor-pointer hover:bg-primary hover:text-white transition-all"
+                >#ハードウェア</span
+              >
+              <span
+                class="px-3 py-1 bg-white rounded-full text-[0.6875rem] font-semibold text-primary-container border border-primary/5 cursor-pointer hover:bg-primary hover:text-white transition-all"
+                >#福利厚生</span
+              >
+              <span
+                class="px-3 py-1 bg-white rounded-full text-[0.6875rem] font-semibold text-primary-container border border-primary/5 cursor-pointer hover:bg-primary hover:text-white transition-all"
+                >#規定</span
+              >
+            </div>
+          </div>
+        </section>
+        <!-- Question Cards List -->
+        <section class="grid grid-cols-1 gap-6">
+          <!-- Card 1 (Solved) -->
+          <div
+            class="bg-surface-container-lowest p-8 rounded-xl relative group transition-all hover:translate-y-[-2px] hover:shadow-[0_12px_40px_rgba(0,27,60,0.05)] border border-transparent hover:border-outline-variant/10"
+          >
+            <div class="flex justify-between items-start mb-4">
+              <div class="flex items-center gap-3">
+                <span
+                  class="px-3 py-1 bg-[#2D6A4F]/10 text-[#2D6A4F] text-[0.6875rem] font-bold rounded-full flex items-center gap-1"
+                >
+                  <span
+                    class="material-symbols-outlined text-xs"
+                    data-icon="check_circle"
+                    >check_circle</span
+                  >
+                  解決済み
+                </span>
+                <span class="text-[0.6875rem] font-semibold text-secondary"
+                  >2024-05-11 更新</span
+                >
+              </div>
+              <button class="text-outline hover:text-primary transition-colors">
+                <span class="material-symbols-outlined" data-icon="bookmark"
+                  >bookmark</span
+                >
+              </button>
+            </div>
+            <h3
+              class="text-[1.125rem] font-bold text-primary mb-4 leading-snug group-hover:text-surface-tint transition-colors"
+            >
+              Slackのチャンネル一覧はどこで確認できますか？
+            </h3>
+            <div class="flex items-center gap-6">
+              <div class="flex items-center gap-2">
+                <span
+                  class="px-3 py-1 bg-secondary-container/30 text-on-secondary-container text-[0.6875rem] font-semibold rounded"
+                  >Slack</span
+                >
+              </div>
+              <div class="flex items-center gap-4 text-slate-400">
+                <div class="flex items-center gap-1.5">
+                  <span
+                    class="material-symbols-outlined text-lg"
+                    data-icon="chat_bubble"
+                    >chat_bubble</span
+                  >
+                  <span class="text-xs font-medium">3 回答</span>
+                </div>
+                <div class="flex items-center gap-1.5 text-[#2D6A4F]">
+                  <span
+                    class="material-symbols-outlined text-lg"
+                    data-icon="verified"
+                    data-weight="fill"
+                    >verified</span
+                  >
+                  <span class="text-xs font-bold">ベストアンサーあり</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Card 2 (Unsolved) -->
+          <div
+            class="bg-surface-container-lowest p-8 rounded-xl relative group transition-all hover:translate-y-[-2px] hover:shadow-[0_12px_40px_rgba(0,27,60,0.05)] border border-transparent hover:border-outline-variant/10"
+          >
+            <div class="flex justify-between items-start mb-4">
+              <div class="flex items-center gap-3">
+                <span
+                  class="px-3 py-1 bg-tertiary-fixed text-on-tertiary-fixed-variant text-[0.6875rem] font-bold rounded-full"
+                >
+                  未解決
+                </span>
+                <span class="text-[0.6875rem] font-semibold text-secondary"
+                  >2024-05-13 更新</span
+                >
+              </div>
+              <button class="text-outline hover:text-primary transition-colors">
+                <span class="material-symbols-outlined" data-icon="bookmark"
+                  >bookmark</span
+                >
+              </button>
+            </div>
+            <h3
+              class="text-[1.125rem] font-bold text-primary mb-4 leading-snug group-hover:text-surface-tint transition-colors"
+            >
+              MacBook Proの貸出申請について
+            </h3>
+            <div class="flex items-center gap-6">
+              <div class="flex items-center gap-2">
+                <span
+                  class="px-3 py-1 bg-secondary-container/30 text-on-secondary-container text-[0.6875rem] font-semibold rounded"
+                  >ハードウェア</span
+                >
+              </div>
+              <div class="flex items-center gap-4 text-slate-400">
+                <div class="flex items-center gap-1.5">
+                  <span
+                    class="material-symbols-outlined text-lg"
+                    data-icon="chat_bubble"
+                    >chat_bubble</span
+                  >
+                  <span class="text-xs font-medium">1 回答</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Card 3 (Example of diversity in list) -->
+          <div
+            class="bg-surface-container-lowest p-8 rounded-xl relative group transition-all hover:translate-y-[-2px] hover:shadow-[0_12px_40px_rgba(0,27,60,0.05)] border border-transparent hover:border-outline-variant/10"
+          >
+            <div class="flex justify-between items-start mb-4">
+              <div class="flex items-center gap-3">
+                <span
+                  class="px-3 py-1 bg-tertiary-fixed text-on-tertiary-fixed-variant text-[0.6875rem] font-bold rounded-full"
+                >
+                  未解決
+                </span>
+                <span class="text-[0.6875rem] font-semibold text-secondary"
+                  >2024-05-14 更新</span
+                >
+              </div>
+              <button class="text-outline hover:text-primary transition-colors">
+                <span class="material-symbols-outlined" data-icon="bookmark"
+                  >bookmark</span
+                >
+              </button>
+            </div>
+            <h3
+              class="text-[1.125rem] font-bold text-primary mb-4 leading-snug group-hover:text-surface-tint transition-colors"
+            >
+              夏季休暇の繰り越し制度についての規定を確認したい
+            </h3>
+            <div class="flex items-center gap-6">
+              <div class="flex items-center gap-2">
+                <span
+                  class="px-3 py-1 bg-secondary-container/30 text-on-secondary-container text-[0.6875rem] font-semibold rounded"
+                  >福利厚生</span
+                >
+                <span
+                  class="px-3 py-1 bg-secondary-container/30 text-on-secondary-container text-[0.6875rem] font-semibold rounded"
+                  >規定</span
+                >
+              </div>
+              <div class="flex items-center gap-4 text-slate-400">
+                <div class="flex items-center gap-1.5">
+                  <span
+                    class="material-symbols-outlined text-lg"
+                    data-icon="chat_bubble"
+                    >chat_bubble</span
+                  >
+                  <span class="text-xs font-medium">0 回答</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <!-- Pagination or Load More (Subtle) -->
+        <div class="flex justify-center pt-8">
+          <button
+            class="px-8 py-3 bg-surface-container-high text-primary font-bold text-[0.6875rem] uppercase tracking-widest rounded-full hover:bg-surface-container-highest transition-colors"
+          >
+            さらに読み込む
+          </button>
+        </div>
+      </div>
+      <!-- Footer Decoration / Glassmorphism Detail -->
+      <footer class="mt-auto py-10 px-10">
+        <div
+          class="border-t border-surface-container-high pt-8 flex justify-between items-center text-[0.6875rem] text-slate-400 font-medium"
+        >
+          <div>© 2024 Knowledge Infrastructure. All rights reserved.</div>
+          <div class="flex gap-6">
+            <a class="hover:text-primary transition-colors" href="#"
+              >ヘルプセンター</a
+            >
+            <a class="hover:text-primary transition-colors" href="#"
+              >プライバシーポリシー</a
+            >
+          </div>
+        </div>
+      </footer>
+    </main>
+    <!-- FAB (Suppressed on List screens as per guidelines, but placed if specific context required creation) -->
+    <!-- Rule says suppress on Details, Transactional. List screen is a Discovery Surface, keeping UI focused on content. -->
+  </body>
+</html>

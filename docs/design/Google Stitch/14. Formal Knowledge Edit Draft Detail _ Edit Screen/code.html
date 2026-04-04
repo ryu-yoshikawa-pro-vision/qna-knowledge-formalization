@@ -1,0 +1,581 @@
+<!doctype html>
+
+<html class="light" lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "secondary-fixed-dim": "#bdc7db",
+              "error-container": "#ffdad6",
+              primary: "#002045",
+              "on-secondary-fixed-variant": "#3e4758",
+              background: "#f7f9fb",
+              "tertiary-fixed-dim": "#f2bc82",
+              "outline-variant": "#c4c6cf",
+              "on-tertiary-fixed-variant": "#633f0f",
+              "on-tertiary-container": "#c6955e",
+              "on-secondary-fixed": "#121c2b",
+              "primary-container": "#1a365d",
+              "on-secondary-container": "#5b6577",
+              "on-primary-fixed": "#001b3c",
+              "on-error": "#ffffff",
+              "surface-container-high": "#e6e8ea",
+              "surface-container-lowest": "#ffffff",
+              outline: "#74777f",
+              "on-secondary": "#ffffff",
+              "on-primary-fixed-variant": "#2d476f",
+              "surface-container": "#eceef0",
+              "surface-dim": "#d8dadc",
+              "surface-bright": "#f7f9fb",
+              "inverse-primary": "#adc7f7",
+              secondary: "#555f70",
+              error: "#ba1a1a",
+              "on-error-container": "#93000a",
+              "inverse-surface": "#2d3133",
+              "inverse-on-surface": "#eff1f3",
+              "on-tertiary": "#ffffff",
+              "secondary-fixed": "#d9e3f8",
+              tertiary: "#321b00",
+              "on-background": "#191c1e",
+              "primary-fixed": "#d6e3ff",
+              "tertiary-fixed": "#ffddba",
+              "surface-container-low": "#f2f4f6",
+              "surface-container-highest": "#e0e3e5",
+              "secondary-container": "#d9e3f8",
+              "on-tertiary-fixed": "#2b1700",
+              "surface-tint": "#455f88",
+              "on-primary": "#ffffff",
+              "primary-fixed-dim": "#adc7f7",
+              "on-surface": "#191c1e",
+              surface: "#f7f9fb",
+              "on-primary-container": "#86a0cd",
+              "tertiary-container": "#4f2e00",
+              "surface-variant": "#e0e3e5",
+              "on-surface-variant": "#43474e",
+            },
+            borderRadius: {
+              DEFAULT: "0.125rem",
+              lg: "0.25rem",
+              xl: "0.5rem",
+              full: "0.75rem",
+            },
+            fontFamily: {
+              headline: ["Manrope"],
+              body: ["Inter"],
+              label: ["Inter"],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #f7f9fb;
+      }
+      .font-headline {
+        font-family: "Manrope", sans-serif;
+      }
+      .material-symbols-outlined {
+        font-variation-settings:
+          "FILL" 0,
+          "wght" 400,
+          "GRAD" 0,
+          "opsz" 24;
+        vertical-align: middle;
+      }
+      .glass-panel {
+        backdrop-filter: blur(20px);
+        background: rgba(255, 255, 255, 0.8);
+      }
+      .tonal-gradient {
+        background: linear-gradient(135deg, #002045 0%, #1a365d 100%);
+      }
+      input:focus,
+      textarea:focus {
+        outline: none;
+        border-color: transparent;
+        ring: none;
+      }
+    </style>
+  </head>
+  <body class="text-on-surface">
+    <!-- SideNavBar (Shared Component) -->
+    <aside
+      class="fixed left-0 top-0 h-full flex flex-col py-4 z-40 bg-blue-950 dark:bg-slate-950 w-64 shadow-xl shadow-blue-900/10"
+    >
+      <div class="px-6 mb-8">
+        <div class="flex items-center gap-3">
+          <div
+            class="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center"
+          >
+            <span
+              class="material-symbols-outlined text-white"
+              data-icon="menu_book"
+              >menu_book</span
+            >
+          </div>
+          <div>
+            <div
+              class="text-lg font-bold text-white font-headline tracking-tight"
+            >
+              知識基盤
+            </div>
+            <div
+              class="text-[0.6875rem] font-semibold text-blue-200/50 uppercase tracking-widest"
+            >
+              Enterprise KM
+            </div>
+          </div>
+        </div>
+      </div>
+      <nav class="flex-1 space-y-1">
+        <a
+          class="bg-blue-800 text-white rounded-lg mx-2 flex items-center px-4 py-3 gap-3 transition-all translate-x-1"
+          href="#"
+        >
+          <span class="material-symbols-outlined" data-icon="menu_book"
+            >menu_book</span
+          >
+          <span class="text-[0.875rem] font-medium tracking-wide">知識</span>
+        </a>
+        <a
+          class="text-blue-200/70 hover:text-white mx-2 flex items-center px-4 py-3 gap-3 transition-all hover:bg-blue-800/40 rounded-lg"
+          href="#"
+        >
+          <span class="material-symbols-outlined" data-icon="quiz">quiz</span>
+          <span class="text-[0.875rem] font-medium tracking-wide">質問</span>
+        </a>
+        <a
+          class="text-blue-200/70 hover:text-white mx-2 flex items-center px-4 py-3 gap-3 transition-all hover:bg-blue-800/40 rounded-lg"
+          href="#"
+        >
+          <span class="material-symbols-outlined" data-icon="bookmark"
+            >bookmark</span
+          >
+          <span class="text-[0.875rem] font-medium tracking-wide"
+            >ブックマーク</span
+          >
+        </a>
+        <a
+          class="text-blue-200/70 hover:text-white mx-2 flex items-center px-4 py-3 gap-3 transition-all hover:bg-blue-800/40 rounded-lg"
+          href="#"
+        >
+          <span class="material-symbols-outlined" data-icon="notifications"
+            >notifications</span
+          >
+          <span class="text-[0.875rem] font-medium tracking-wide">通知</span>
+        </a>
+        <a
+          class="text-blue-200/70 hover:text-white mx-2 flex items-center px-4 py-3 gap-3 transition-all hover:bg-blue-800/40 rounded-lg"
+          href="#"
+        >
+          <span class="material-symbols-outlined" data-icon="settings_suggest"
+            >settings_suggest</span
+          >
+          <span class="text-[0.875rem] font-medium tracking-wide"
+            >管理者設定</span
+          >
+        </a>
+      </nav>
+      <div class="px-4 mt-auto">
+        <button
+          class="w-full py-3 bg-white text-primary font-bold rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-black/20 hover:scale-95 transition-transform"
+        >
+          <span class="material-symbols-outlined" data-icon="add">add</span>
+          新規作成
+        </button>
+      </div>
+    </aside>
+    <!-- Main Content Area -->
+    <main class="ml-64 min-h-screen">
+      <!-- TopAppBar (Shared Component Equivalent) -->
+      <header
+        class="sticky top-0 z-30 bg-white/80 backdrop-blur-md flex justify-between items-center px-8 h-16 w-full border-b border-outline-variant/10"
+      >
+        <div class="flex items-center gap-4">
+          <span class="text-slate-400">
+            <span class="material-symbols-outlined">chevron_left</span>
+          </span>
+          <nav class="flex items-center gap-2 text-sm font-medium">
+            <span class="text-slate-400">公式ナレッジ</span>
+            <span class="material-symbols-outlined text-xs text-slate-300"
+              >chevron_right</span
+            >
+            <span class="text-primary">編集ドラフト</span>
+          </nav>
+        </div>
+        <div class="flex items-center gap-4">
+          <div
+            class="flex items-center gap-2 px-3 py-1.5 bg-secondary-fixed-dim/20 rounded-full text-on-secondary-container"
+          >
+            <span
+              class="material-symbols-outlined text-[18px]"
+              style="font-variation-settings: &quot;FILL&quot; 1"
+              >drafts</span
+            >
+            <span class="text-[0.75rem] font-bold tracking-wider"
+              >DRAFT MODE</span
+            >
+          </div>
+          <div class="h-8 w-px bg-outline-variant/30 mx-2"></div>
+          <button
+            class="p-2 text-slate-500 hover:bg-slate-100 rounded-full transition-colors"
+          >
+            <span class="material-symbols-outlined">rate_review</span>
+          </button>
+          <img
+            alt="User avatar"
+            class="w-8 h-8 rounded-full border-2 border-primary/10"
+            data-alt="portrait of a professional man in a clean office environment, soft daylight, high-end photography"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuBmFv_TFXT8tN70JbpMQApFGkB_50P-oe3srK6FYbhBWaek8dxa0rcjKX8c09od3odAR6T_tFHeJy1kbYh09b-_hkiJW0W7dF5e9XzWtrRMgSGUsex6SxxEfHI_CfI-HMjGw6QVr20kQQWcElo4Ivs0CeAALiHZW-moXD4dc4v4YgW_fKfudk2Pont6FU9fyAEZrNkxoC-SJKQjtXWvsmgDR2rHT5nDny-QfhegzYt215tqFfO-Fo3BvxiP-Ejy2csJ2X9Ei0XP-Hc"
+          />
+        </div>
+      </header>
+      <div class="max-w-6xl mx-auto px-8 py-10">
+        <!-- Header Section -->
+        <div class="flex justify-between items-start mb-12">
+          <div class="space-y-4">
+            <div class="flex items-center gap-3">
+              <span
+                class="px-3 py-1 bg-primary text-white text-[0.6875rem] font-bold rounded-full tracking-widest"
+                >FORMAL</span
+              >
+              <span class="text-slate-400 text-sm"
+                >最終更新: 2024年5月20日 14:30</span
+              >
+            </div>
+            <h1
+              class="text-4xl font-extrabold font-headline text-primary leading-tight tracking-tight max-w-3xl"
+            >
+              次世代セキュリティプロトコル：実装ガイドライン (Draft v2.1)
+            </h1>
+          </div>
+          <div class="flex flex-col items-end gap-4">
+            <div class="flex gap-3">
+              <button
+                class="px-5 py-2.5 bg-surface-container-highest text-primary font-bold rounded-xl text-sm hover:bg-surface-container-high transition-colors"
+              >
+                下書き保存
+              </button>
+              <button
+                class="px-6 py-2.5 tonal-gradient text-white font-bold rounded-xl text-sm shadow-lg shadow-primary/20 hover:scale-[0.98] transition-transform flex items-center gap-2"
+              >
+                <span class="material-symbols-outlined text-[18px]">send</span>
+                レビューを依頼
+              </button>
+            </div>
+            <div class="flex -space-x-2">
+              <img
+                class="w-8 h-8 rounded-full border-2 border-white"
+                data-alt="professional female profile picture, soft lighting, smiling"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuCpOjyJc89ndBYrArxd31E5U9VTndidoerfl2vekPdCJE0PGqwtZe4Vb29aBcOsCrFhD6gomfJpnAOwl-IS7srYW8vVDlzew3se2X6C-jHzyGmv5zPk_OVXXbNOkWJbjPGhzStjkgNKEI5gYrkH3JzQRBLevORmeX6UNX3t1fxKrsJpNL1QUltDGOuZ0syGa5e8FUFz03cWrECCX1797TI3C_U7G39rGYNjftNlQIV7EzBKc-qjPTi5_R0iK_QXuHTuwTUQjchdHnw"
+              />
+              <img
+                class="w-8 h-8 rounded-full border-2 border-white"
+                data-alt="professional male profile picture, blue suit, blurred background"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuAjxTxcCzJV6JWdxUFBXjUyjcOWiN7e-SR17saJSkS64UOYU2VKaq_fGbzfLy992E2v-KNHuMElOjTFKHbkidc7rR65BUmBY4zRAzhb3hvGRf3l6I0xjQoDilqtSckoXB3ZjnhCDX-GAgWUoQ_oxUj0Todrok1Cbi-tc1nw-nA2ZLejEWXGuJ9XFOGVomQoCIg3bNyKOaoqz90FqNNB1I7En4Xzl5VQCAyi1J-WGyGMfDzZEPVoAXDL5x386WNvIuBr7N3lGn5Qp08"
+              />
+              <div
+                class="w-8 h-8 rounded-full bg-surface-container-highest border-2 border-white flex items-center justify-center text-[10px] font-bold text-primary"
+              >
+                +2
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Bento Layout Content -->
+        <div class="grid grid-cols-12 gap-6">
+          <!-- Main Editor Area -->
+          <div class="col-span-8 space-y-6">
+            <div
+              class="bg-surface-container-lowest rounded-3xl p-8 shadow-sm border border-outline-variant/10"
+            >
+              <div
+                class="flex items-center justify-between mb-8 pb-4 border-b border-outline-variant/10"
+              >
+                <h2 class="text-xl font-bold text-primary font-headline">
+                  コンテンツ編集
+                </h2>
+                <div class="flex items-center gap-2">
+                  <button
+                    class="p-2 hover:bg-slate-100 rounded-lg text-slate-500"
+                  >
+                    <span class="material-symbols-outlined">format_bold</span>
+                  </button>
+                  <button
+                    class="p-2 hover:bg-slate-100 rounded-lg text-slate-500"
+                  >
+                    <span class="material-symbols-outlined">format_italic</span>
+                  </button>
+                  <button
+                    class="p-2 hover:bg-slate-100 rounded-lg text-slate-500"
+                  >
+                    <span class="material-symbols-outlined">link</span>
+                  </button>
+                  <div class="w-px h-4 bg-outline-variant/30 mx-2"></div>
+                  <button
+                    class="p-2 hover:bg-slate-100 rounded-lg text-slate-500"
+                  >
+                    <span class="material-symbols-outlined">image</span>
+                  </button>
+                  <button
+                    class="p-2 hover:bg-slate-100 rounded-lg text-slate-500"
+                  >
+                    <span class="material-symbols-outlined">code</span>
+                  </button>
+                </div>
+              </div>
+              <div class="space-y-6">
+                <div>
+                  <label
+                    class="block text-[0.6875rem] font-bold text-slate-400 uppercase tracking-widest mb-2"
+                    >概要</label
+                  >
+                  <textarea
+                    class="w-full bg-surface-container-low border-none rounded-2xl p-4 text-primary leading-relaxed focus:ring-2 ring-primary/5 transition-all h-32"
+                    placeholder="ナレッジの概要を入力してください..."
+                  >
+本ガイドラインは、2024年度の全社セキュリティ基盤の刷新に伴い、各プロジェクトが遵守すべき実装基準を定義したものです。旧プロトコル（v1.8）からの変更点に重点を置いています。</textarea
+                  >
+                </div>
+                <div>
+                  <label
+                    class="block text-[0.6875rem] font-bold text-slate-400 uppercase tracking-widest mb-2"
+                    >本文</label
+                  >
+                  <div class="relative group">
+                    <textarea
+                      class="w-full bg-surface-container-low border-none rounded-2xl p-6 text-primary leading-relaxed focus:ring-2 ring-primary/5 transition-all min-h-[500px]"
+                      placeholder="内容を詳しく記載してください..."
+                    >
+## 1. 認証フローの刷新
+従来のセッションベース認証から、ステートレスなJWT（JSON Web Token）ベースの認証へと移行します。
+
+### 1.1 トークンの発行と更新
+- 有効期限（TTL）は最短15分に設定してください。
+- リフレッシュトークンはHTTP-only Cookieでのみ保持します。
+
+## 2. 暗号化標準
+全てのデータ転送にはTLS 1.3を必須とします。内部ネットワーク内であっても暗号化をバイパスすることは禁止されています。
+
+## 3. ロギングとモニタリング
+監査ログには以下の項目を含める必要があります：
+- 実行ユーザーID
+- ソースIPアドレス
+- タイムスタンプ（ISO 8601形式）
+- 実行されたアクションの成否</textarea
+                    >
+                    <div
+                      class="absolute bottom-4 right-4 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      <span class="text-[10px] font-bold text-slate-400"
+                        >文字数: 1,240</span
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Right Sidebar / Metadata -->
+          <div class="col-span-4 space-y-6">
+            <!-- Review Panel -->
+            <div
+              class="bg-primary-container rounded-3xl p-6 text-white shadow-xl shadow-primary/10"
+            >
+              <h3
+                class="font-headline font-bold text-lg mb-4 flex items-center gap-2"
+              >
+                <span class="material-symbols-outlined text-secondary-fixed-dim"
+                  >verified</span
+                >
+                公式版との比較
+              </h3>
+              <div class="space-y-4">
+                <div class="p-4 bg-white/5 rounded-2xl border border-white/10">
+                  <div
+                    class="flex justify-between text-[11px] font-bold text-blue-200 uppercase tracking-tighter mb-2"
+                  >
+                    <span>変更箇所</span>
+                    <span class="text-green-400">+12% 追加</span>
+                  </div>
+                  <p class="text-sm text-blue-100 leading-relaxed">
+                    セキュリティ要件のセクションに「量子耐性暗号」に関するパラグラフが追加されました。
+                  </p>
+                </div>
+                <div class="p-4 bg-white/5 rounded-2xl border border-white/10">
+                  <div
+                    class="flex justify-between text-[11px] font-bold text-blue-200 uppercase tracking-tighter mb-2"
+                  >
+                    <span>未解決の指摘</span>
+                    <span class="text-error-container">2件</span>
+                  </div>
+                  <div class="space-y-2">
+                    <div class="flex gap-2 items-start">
+                      <div
+                        class="w-1.5 h-1.5 rounded-full bg-error-container mt-1.5"
+                      ></div>
+                      <p class="text-xs text-blue-100 italic">
+                        「第2章の図解が古いままです」— 佐藤 健太
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Properties Card -->
+            <div
+              class="bg-surface-container-lowest rounded-3xl p-6 shadow-sm border border-outline-variant/10"
+            >
+              <h3
+                class="text-[0.6875rem] font-extrabold text-slate-400 uppercase tracking-[0.2em] mb-6"
+              >
+                記事プロパティ
+              </h3>
+              <div class="space-y-6">
+                <div class="flex justify-between items-center">
+                  <span class="text-sm font-medium text-slate-500"
+                    >カテゴリ</span
+                  >
+                  <span
+                    class="px-3 py-1 bg-surface-container-low text-primary text-xs font-bold rounded-lg border border-outline-variant/20"
+                    >セキュリティ基盤</span
+                  >
+                </div>
+                <div class="flex justify-between items-center">
+                  <span class="text-sm font-medium text-slate-500">タグ</span>
+                  <div class="flex gap-1">
+                    <span class="text-xs text-blue-600 font-bold">#Auth</span>
+                    <span class="text-xs text-blue-600 font-bold"
+                      >#Standard</span
+                    >
+                  </div>
+                </div>
+                <div class="flex justify-between items-center">
+                  <span class="text-sm font-medium text-slate-500"
+                    >公開設定</span
+                  >
+                  <span
+                    class="flex items-center gap-1 text-xs font-bold text-primary"
+                  >
+                    <span class="material-symbols-outlined text-[16px]"
+                      >domain</span
+                    >
+                    全社公開
+                  </span>
+                </div>
+              </div>
+              <div class="mt-8 pt-8 border-t border-outline-variant/10">
+                <label
+                  class="block text-[0.6875rem] font-bold text-slate-400 uppercase tracking-widest mb-4"
+                  >レビューアの選択</label
+                >
+                <div class="space-y-2">
+                  <div
+                    class="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-xl cursor-pointer transition-colors group"
+                  >
+                    <img
+                      class="w-8 h-8 rounded-full"
+                      data-alt="headshot of professional woman in business attire"
+                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuCXIdrlJHFwB5JM8aMp18iK74kwYjNf0Ss_dT9eZ0T0ocHmeaGHuD3b6O4gtTotHEYVymPQfEu0-LH8CyHlvVu5deiJ0nt5gQNaBVvJzyiesHeHDjAso9Ii-erf877XOR_TzsWJ9xIzgX-ceV2220qKhA5NVfztJAiCnn5B76RnXkIw_WCayMEy7aVl_HhKzsXMDAU2v32NK9PQGhSq8J8IDF2ucfOc48OJKnEyF5772pTlWcuD0wR_hjzE4LfaeWriXb7deQsBsQc"
+                    />
+                    <div class="flex-1">
+                      <div class="text-xs font-bold text-primary">
+                        田中 結衣
+                      </div>
+                      <div class="text-[10px] text-slate-400">
+                        セキュリティリード
+                      </div>
+                    </div>
+                    <span
+                      class="material-symbols-outlined text-slate-300 group-hover:text-primary transition-colors"
+                      >add_circle</span
+                    >
+                  </div>
+                  <div
+                    class="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-xl cursor-pointer transition-colors group"
+                  >
+                    <div
+                      class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center text-white text-[10px] font-bold"
+                    >
+                      RS
+                    </div>
+                    <div class="flex-1">
+                      <div class="text-xs font-bold text-primary">
+                        Robert Smith
+                      </div>
+                      <div class="text-[10px] text-slate-400">
+                        Architechture Div.
+                      </div>
+                    </div>
+                    <span
+                      class="material-symbols-outlined text-slate-300 group-hover:text-primary transition-colors"
+                      >add_circle</span
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Change History Mini -->
+            <div class="bg-surface-container-low rounded-3xl p-6">
+              <h3
+                class="text-[0.6875rem] font-extrabold text-slate-400 uppercase tracking-widest mb-4"
+              >
+                ドラフト履歴
+              </h3>
+              <div
+                class="space-y-4 border-l-2 border-outline-variant/30 ml-2 pl-4"
+              >
+                <div class="relative">
+                  <div
+                    class="absolute -left-[21px] top-1 w-2 h-2 rounded-full bg-primary ring-4 ring-background"
+                  ></div>
+                  <div class="text-xs font-bold text-primary">修正 (v2.1)</div>
+                  <div class="text-[10px] text-slate-500">2時間前 - あなた</div>
+                </div>
+                <div class="relative">
+                  <div
+                    class="absolute -left-[21px] top-1 w-2 h-2 rounded-full bg-slate-300 ring-4 ring-background"
+                  ></div>
+                  <div class="text-xs font-bold text-slate-400">
+                    初回作成 (v2.0)
+                  </div>
+                  <div class="text-[10px] text-slate-500">昨日 - あなた</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <!-- Contextual FAB (Only for specific primary actions) -->
+    <button
+      class="fixed bottom-8 right-8 w-14 h-14 bg-primary text-white rounded-full shadow-2xl flex items-center justify-center hover:scale-110 transition-transform z-50"
+    >
+      <span
+        class="material-symbols-outlined"
+        style="font-variation-settings: &quot;FILL&quot; 1"
+        >comment</span
+      >
+    </button>
+  </body>
+</html>

@@ -1,0 +1,689 @@
+<!doctype html>
+
+<html class="light" lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Knowledge Infrastructure - タグ管理</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Manrope:wght@700;800&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary-fixed": "#d6e3ff",
+              "tertiary-fixed-dim": "#f2bc82",
+              surface: "#f7f9fb",
+              "primary-fixed-dim": "#adc7f7",
+              "on-tertiary-container": "#c6955e",
+              "on-secondary-fixed-variant": "#3e4758",
+              "surface-container-low": "#f2f4f6",
+              secondary: "#555f70",
+              "on-surface-variant": "#43474e",
+              "secondary-container": "#d9e3f8",
+              "surface-container": "#eceef0",
+              "on-tertiary-fixed": "#2b1700",
+              outline: "#74777f",
+              background: "#f7f9fb",
+              "on-tertiary": "#ffffff",
+              "surface-container-high": "#e6e8ea",
+              "inverse-surface": "#2d3133",
+              error: "#ba1a1a",
+              tertiary: "#321b00",
+              "on-background": "#191c1e",
+              "on-primary-fixed": "#001b3c",
+              "on-primary-fixed-variant": "#2d476f",
+              "primary-container": "#1a365d",
+              "error-container": "#ffdad6",
+              "on-error": "#ffffff",
+              "surface-bright": "#f7f9fb",
+              "inverse-primary": "#adc7f7",
+              "on-error-container": "#93000a",
+              "on-tertiary-fixed-variant": "#633f0f",
+              "surface-dim": "#d8dadc",
+              "surface-container-highest": "#e0e3e5",
+              "tertiary-container": "#4f2e00",
+              "tertiary-fixed": "#ffddba",
+              "on-secondary": "#ffffff",
+              "on-surface": "#191c1e",
+              primary: "#002045",
+              "inverse-on-surface": "#eff1f3",
+              "secondary-fixed": "#d9e3f8",
+              "surface-container-lowest": "#ffffff",
+              "on-secondary-container": "#5b6577",
+              "outline-variant": "#c4c6cf",
+              "on-primary-container": "#86a0cd",
+              "on-secondary-fixed": "#121c2b",
+              "surface-variant": "#e0e3e5",
+              "surface-tint": "#455f88",
+              "secondary-fixed-dim": "#bdc7db",
+              "on-primary": "#ffffff",
+            },
+            borderRadius: {
+              DEFAULT: "0.125rem",
+              lg: "0.25rem",
+              xl: "0.5rem",
+              full: "0.75rem",
+            },
+            fontFamily: {
+              headline: ["Manrope"],
+              body: ["Inter"],
+              label: ["Inter"],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      h1,
+      h2,
+      h3 {
+        font-family: "Manrope", sans-serif;
+      }
+      .material-symbols-outlined {
+        font-variation-settings:
+          "FILL" 0,
+          "wght" 400,
+          "GRAD" 0,
+          "opsz" 24;
+        vertical-align: middle;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-background text-on-background antialiased flex overflow-hidden"
+  >
+    <!-- SideNavBar (Shared Component) -->
+    <aside
+      class="fixed left-0 top-0 h-full flex flex-col py-4 z-40 bg-blue-950 dark:bg-slate-950 text-white w-64 shadow-xl shadow-blue-900/10"
+    >
+      <div class="px-6 mb-8">
+        <div class="flex items-center gap-3">
+          <div
+            class="w-10 h-10 rounded-lg bg-blue-800 flex items-center justify-center"
+          >
+            <span class="material-symbols-outlined text-white">menu_book</span>
+          </div>
+          <div>
+            <h1 class="text-lg font-bold text-white tracking-tight">
+              知識基盤
+            </h1>
+            <p
+              class="text-[0.6875rem] font-semibold text-blue-300/70 uppercase tracking-widest leading-none"
+            >
+              Enterprise KM
+            </p>
+          </div>
+        </div>
+      </div>
+      <nav class="flex-1 space-y-1">
+        <a
+          class="flex items-center gap-3 py-3 px-6 text-blue-200/70 hover:text-white mx-2 hover:bg-blue-800/40 rounded-lg transition-all group"
+          href="#"
+        >
+          <span class="material-symbols-outlined text-[22px]">menu_book</span>
+          <span class="text-[0.875rem] font-medium">知識</span>
+        </a>
+        <a
+          class="flex items-center gap-3 py-3 px-6 text-blue-200/70 hover:text-white mx-2 hover:bg-blue-800/40 rounded-lg transition-all group"
+          href="#"
+        >
+          <span class="material-symbols-outlined text-[22px]">quiz</span>
+          <span class="text-[0.875rem] font-medium">質問</span>
+        </a>
+        <a
+          class="flex items-center gap-3 py-3 px-6 text-blue-200/70 hover:text-white mx-2 hover:bg-blue-800/40 rounded-lg transition-all group"
+          href="#"
+        >
+          <span class="material-symbols-outlined text-[22px]">bookmark</span>
+          <span class="text-[0.875rem] font-medium">ブックマーク</span>
+        </a>
+        <a
+          class="flex items-center gap-3 py-3 px-6 text-blue-200/70 hover:text-white mx-2 hover:bg-blue-800/40 rounded-lg transition-all group"
+          href="#"
+        >
+          <span class="material-symbols-outlined text-[22px]"
+            >notifications</span
+          >
+          <span class="text-[0.875rem] font-medium">通知</span>
+        </a>
+        <div class="pt-4 pb-2 px-8">
+          <span
+            class="text-[0.625rem] font-bold text-blue-400 uppercase tracking-widest"
+            >Administration</span
+          >
+        </div>
+        <a
+          class="flex items-center gap-3 py-3 px-6 bg-blue-800 text-white rounded-lg mx-2 translate-x-1 transition-transform group"
+          href="#"
+        >
+          <span class="material-symbols-outlined text-[22px]"
+            >settings_suggest</span
+          >
+          <span class="text-[0.875rem] font-medium">管理者設定</span>
+        </a>
+      </nav>
+      <div class="px-4 mt-auto">
+        <button
+          class="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-semibold text-sm transition-colors shadow-lg shadow-blue-900/20 flex items-center justify-center gap-2"
+        >
+          <span class="material-symbols-outlined text-sm">add</span>
+          新規作成
+        </button>
+      </div>
+    </aside>
+    <!-- Main Canvas -->
+    <main
+      class="flex-1 ml-64 min-h-screen flex flex-col relative overflow-hidden bg-background"
+    >
+      <!-- TopNavBar (Shared Component) -->
+      <header
+        class="sticky top-0 z-30 flex justify-between items-center px-6 h-16 w-full bg-slate-50 dark:bg-slate-900 tonal-layering"
+      >
+        <div class="flex items-center gap-6">
+          <div class="relative group">
+            <span
+              class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
+              >search</span
+            >
+            <input
+              class="bg-surface-container-low border-0 rounded-full pl-10 pr-4 py-2 text-sm w-80 focus:ring-2 focus:ring-primary/20 transition-all outline-none"
+              placeholder="ナレッジを検索..."
+              type="text"
+            />
+          </div>
+          <nav class="hidden lg:flex items-center gap-6">
+            <a
+              class="text-blue-900 dark:text-blue-100 font-semibold border-b-2 border-blue-900 py-5 text-sm"
+              href="#"
+              >ワークスペース</a
+            >
+          </nav>
+        </div>
+        <div class="flex items-center gap-4">
+          <button
+            class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-slate-200/50 transition-colors"
+          >
+            <span class="material-symbols-outlined text-slate-500"
+              >notifications</span
+            >
+          </button>
+          <button
+            class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-slate-200/50 transition-colors"
+          >
+            <span class="material-symbols-outlined text-slate-500"
+              >rate_review</span
+            >
+          </button>
+          <div class="h-8 w-[1px] bg-outline-variant/30 mx-2"></div>
+          <img
+            alt="User avatar"
+            class="w-9 h-9 rounded-full object-cover ring-2 ring-white shadow-sm"
+            data-alt="Professional man with glasses in a corporate environment looking confidently at the camera"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDW6XWAtpI0mK9Kz2wYpTCsUivmMQBHIfvMPSPh9MQJzw_Fjs3Fh7koqQN--at3ubDISgfsn-HDG4NR1fLRzQ4fcTTerVhE5qveyNexJr-q2-rDkz4MeRUWBy96rk1do5h9WwfVHYlzc4BsR9mjYfsJpr7Uxaz6E8rEH0wrbI0j-yGX2GJS1Dhc0GyOC5_5cizCdSzihfKasI2M9_VYwtsdiIDlEwvHT5iNRI9pz0Hkq2S9RU1ZBiAWJw73j5YikYrJyQrP3aeIP1Y"
+          />
+        </div>
+      </header>
+      <!-- Content Area -->
+      <section class="flex-1 overflow-y-auto p-8 max-w-7xl mx-auto w-full">
+        <!-- Page Header -->
+        <div class="mb-8">
+          <div class="flex items-center justify-between mb-2">
+            <h2
+              class="text-3xl font-extrabold tracking-tight text-primary leading-tight"
+            >
+              タグ管理
+            </h2>
+            <div class="flex gap-3">
+              <button
+                class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-primary hover:bg-surface-container-high rounded-lg transition-colors"
+              >
+                <span class="material-symbols-outlined text-[20px]"
+                  >download</span
+                >
+                CSVエクスポート
+              </button>
+              <button
+                class="flex items-center gap-2 px-4 py-2 bg-primary text-white text-sm font-semibold rounded-lg hover:opacity-90 transition-all shadow-md shadow-primary/10"
+              >
+                <span class="material-symbols-outlined text-[20px]"
+                  >label_important</span
+                >
+                新しいタグを追加
+              </button>
+            </div>
+          </div>
+          <p class="text-secondary max-w-2xl text-sm leading-relaxed">
+            ナレッジの分類を最適化し、タクソノミーの整合性を維持します。タグの統合やリネームは影響範囲を確認してから実行してください。
+          </p>
+        </div>
+        <!-- Filter & Stats Bar -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+          <div
+            class="md:col-span-3 flex items-center gap-1 bg-surface-container-low p-1.5 rounded-xl self-start"
+          >
+            <button
+              class="px-6 py-2 bg-surface-container-lowest shadow-sm rounded-lg text-sm font-semibold text-primary transition-all"
+            >
+              アクティブ (1,242)
+            </button>
+            <button
+              class="px-6 py-2 text-secondary hover:bg-surface-container-high rounded-lg text-sm font-medium transition-all"
+            >
+              統合済み (84)
+            </button>
+            <button
+              class="px-6 py-2 text-secondary hover:bg-surface-container-high rounded-lg text-sm font-medium transition-all"
+            >
+              アーカイブ (215)
+            </button>
+          </div>
+          <div
+            class="bg-surface-container-lowest p-4 rounded-xl shadow-sm border border-outline-variant/10 flex items-center justify-between"
+          >
+            <div>
+              <p
+                class="text-[0.6875rem] font-bold text-secondary uppercase tracking-wider mb-1"
+              >
+                未分類のナレッジ
+              </p>
+              <p class="text-xl font-bold text-primary">12件</p>
+            </div>
+            <span
+              class="material-symbols-outlined text-tertiary-fixed-dim text-3xl"
+              >warning</span
+            >
+          </div>
+        </div>
+        <!-- Tags Management Table -->
+        <div
+          class="bg-surface-container-lowest rounded-2xl shadow-xl shadow-blue-900/5 overflow-hidden ring-1 ring-outline-variant/10"
+        >
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="bg-surface-container-low/50">
+                  <th
+                    class="px-6 py-4 text-[0.6875rem] font-bold text-on-surface-variant uppercase tracking-widest"
+                  >
+                    タグ名 (Tag Name)
+                  </th>
+                  <th
+                    class="px-6 py-4 text-[0.6875rem] font-bold text-on-surface-variant uppercase tracking-widest"
+                  >
+                    正規化名 (Normalized)
+                  </th>
+                  <th
+                    class="px-6 py-4 text-[0.6875rem] font-bold text-on-surface-variant uppercase tracking-widest"
+                  >
+                    ステータス
+                  </th>
+                  <th
+                    class="px-6 py-4 text-[0.6875rem] font-bold text-on-surface-variant uppercase tracking-widest"
+                  >
+                    使用数
+                  </th>
+                  <th
+                    class="px-6 py-4 text-[0.6875rem] font-bold text-on-surface-variant uppercase tracking-widest"
+                  >
+                    作成者
+                  </th>
+                  <th
+                    class="px-6 py-4 text-[0.6875rem] font-bold text-on-surface-variant uppercase tracking-widest"
+                  >
+                    更新日
+                  </th>
+                  <th
+                    class="px-6 py-4 text-[0.6875rem] font-bold text-on-surface-variant uppercase tracking-widest text-right"
+                  >
+                    アクション
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-surface-container">
+                <!-- Row 1 -->
+                <tr
+                  class="hover:bg-surface-container-low/30 transition-colors group"
+                >
+                  <td class="px-6 py-4">
+                    <div class="flex items-center gap-3">
+                      <div
+                        class="w-2 h-2 rounded-full bg-primary-container"
+                      ></div>
+                      <span class="text-sm font-semibold text-primary"
+                        >AI基盤</span
+                      >
+                    </div>
+                  </td>
+                  <td class="px-6 py-4">
+                    <span
+                      class="text-xs font-mono text-secondary px-2 py-0.5 bg-surface-container rounded"
+                      >ai_infrastructure</span
+                    >
+                  </td>
+                  <td class="px-6 py-4">
+                    <span
+                      class="inline-flex items-center px-2 py-1 rounded text-[0.625rem] font-bold bg-primary-fixed text-on-primary-fixed uppercase tracking-wider"
+                      >Formal</span
+                    >
+                  </td>
+                  <td class="px-6 py-4">
+                    <div class="flex items-center gap-2">
+                      <span class="text-sm font-medium text-primary">452</span>
+                      <div
+                        class="w-16 h-1.5 bg-surface-container rounded-full overflow-hidden"
+                      >
+                        <div class="bg-primary h-full w-[70%]"></div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4">
+                    <div class="flex items-center gap-2">
+                      <img
+                        class="w-6 h-6 rounded-full object-cover"
+                        data-alt="Portrait of a male data analyst in a bright office space"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuCuFkDH06ulQxmoJ_rp1rQIxB8IXTrAwzEsaSUv0V2WRT9uv8JfvhLdwQTBDg2OQaDVi7yrPiS4Yv0732rEFb2pupTFc8Jp_koWTFyZT1G1X0xOIp2O44Qi4Pl3kDQ9VJ-T-Lkd2cftxBVzlTK_DDGCoU-tWQj-eyPce2AbiriMIhBtiQjzPdV0Xkg1MOFVwPZz2JUn4I9OTSjb661AqdC7iM76-z_IxP2tu36kXou_TY5JddpSURJPtzljzxLXFR5y2zzIu_U6EjM"
+                      />
+                      <span class="text-xs text-secondary">田中 健一</span>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4">
+                    <span class="text-xs text-secondary">2023/12/15</span>
+                  </td>
+                  <td class="px-6 py-4 text-right">
+                    <div
+                      class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      <button
+                        class="p-2 text-secondary hover:text-primary hover:bg-primary-fixed rounded-lg transition-all"
+                        title="リネーム"
+                      >
+                        <span class="material-symbols-outlined text-[18px]"
+                          >edit</span
+                        >
+                      </button>
+                      <button
+                        class="p-2 text-secondary hover:text-primary hover:bg-primary-fixed rounded-lg transition-all"
+                        title="マージ"
+                      >
+                        <span class="material-symbols-outlined text-[18px]"
+                          >merge</span
+                        >
+                      </button>
+                      <button
+                        class="p-2 text-secondary hover:text-error hover:bg-error-container rounded-lg transition-all"
+                        title="アーカイブ"
+                      >
+                        <span class="material-symbols-outlined text-[18px]"
+                          >archive</span
+                        >
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                <!-- Row 2 -->
+                <tr
+                  class="hover:bg-surface-container-low/30 transition-colors group"
+                >
+                  <td class="px-6 py-4">
+                    <div class="flex items-center gap-3">
+                      <div class="w-2 h-2 rounded-full bg-tertiary"></div>
+                      <span class="text-sm font-semibold text-primary"
+                        >LLM開発</span
+                      >
+                    </div>
+                  </td>
+                  <td class="px-6 py-4">
+                    <span
+                      class="text-xs font-mono text-secondary px-2 py-0.5 bg-surface-container rounded"
+                      >llm_dev</span
+                    >
+                  </td>
+                  <td class="px-6 py-4">
+                    <span
+                      class="inline-flex items-center px-2 py-1 rounded text-[0.625rem] font-bold bg-tertiary-fixed text-on-tertiary-fixed-variant uppercase tracking-wider"
+                      >Unreviewed</span
+                    >
+                  </td>
+                  <td class="px-6 py-4">
+                    <div class="flex items-center gap-2">
+                      <span class="text-sm font-medium text-primary">82</span>
+                      <div
+                        class="w-16 h-1.5 bg-surface-container rounded-full overflow-hidden"
+                      >
+                        <div class="bg-tertiary h-full w-[20%]"></div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4">
+                    <div class="flex items-center gap-2">
+                      <img
+                        class="w-6 h-6 rounded-full object-cover"
+                        data-alt="Portrait of a smiling female engineer with dark hair"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuBRAvjR0_l8Pjx9lBLl4mJuhWD1h7mne79ZOWslO0UXLE7FqT1wCN_cUjx7I9SJRn3Dru0zsilUEodPiT7JTKYYgOlMNFd0YXfiQZeSlKgxxS6Yg02Z-JHqwopqS9Yatpq4Tq7fcOk4S706LX0CRnv2UAfWgdBjxjusJdMrxssxZkigOjLQxMy3sJU5eXN1SFBmPjyBpl0W4U-86ak-96S98fA1GvKsRcnqK41gWMlXYV6bGT5nnxtD72qQMBmi4fKxqi3MzB5WZwA"
+                      />
+                      <span class="text-xs text-secondary">佐藤 美咲</span>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4">
+                    <span class="text-xs text-secondary">2024/01/10</span>
+                  </td>
+                  <td class="px-6 py-4 text-right">
+                    <div
+                      class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      <button
+                        class="p-2 text-secondary hover:text-primary hover:bg-primary-fixed rounded-lg transition-all"
+                        title="リネーム"
+                      >
+                        <span class="material-symbols-outlined text-[18px]"
+                          >edit</span
+                        >
+                      </button>
+                      <button
+                        class="p-2 text-secondary hover:text-primary hover:bg-primary-fixed rounded-lg transition-all"
+                        title="マージ"
+                      >
+                        <span class="material-symbols-outlined text-[18px]"
+                          >merge</span
+                        >
+                      </button>
+                      <button
+                        class="p-2 text-secondary hover:text-error hover:bg-error-container rounded-lg transition-all"
+                        title="アーカイブ"
+                      >
+                        <span class="material-symbols-outlined text-[18px]"
+                          >archive</span
+                        >
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                <!-- Row 3 -->
+                <tr
+                  class="hover:bg-surface-container-low/30 transition-colors group"
+                >
+                  <td class="px-6 py-4">
+                    <div class="flex items-center gap-3">
+                      <div class="w-2 h-2 rounded-full bg-error"></div>
+                      <span class="text-sm font-semibold text-primary"
+                        >データ分析</span
+                      >
+                    </div>
+                  </td>
+                  <td class="px-6 py-4">
+                    <span
+                      class="text-xs font-mono text-secondary px-2 py-0.5 bg-surface-container rounded"
+                      >data_analytics</span
+                    >
+                  </td>
+                  <td class="px-6 py-4">
+                    <span
+                      class="inline-flex items-center px-2 py-1 rounded text-[0.625rem] font-bold bg-error-container text-on-error-container uppercase tracking-wider"
+                      >Changes Req.</span
+                    >
+                  </td>
+                  <td class="px-6 py-4">
+                    <div class="flex items-center gap-2">
+                      <span class="text-sm font-medium text-primary">210</span>
+                      <div
+                        class="w-16 h-1.5 bg-surface-container rounded-full overflow-hidden"
+                      >
+                        <div class="bg-primary h-full w-[45%]"></div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4">
+                    <div class="flex items-center gap-2">
+                      <img
+                        class="w-6 h-6 rounded-full object-cover"
+                        data-alt="Portrait of a young male creative designer"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuA3-_V4RSLc-tF_be0NnrKRFCbr-r7sD30Elmpw6om9BHPbQrczpX5fHbjsO7yl-fxMYOQHgSIqNY0eHJQug6AWfMXyJO3QqH4DSKZP9WO4sXE7aOfdeHVea7sf7dnNViYyUQIqwAMpZzn55BPjwYPRKMMO282P1rRGzOcnWrXbsJQv8clnqaT95NLWTpw9cJ35AsskZhgjT0J7Zjswi7MUQbUbh_qQLh7TqXKbeSqNfV3WFO9T5mSQEmax97oeQQNzPnW0tLkZvCo"
+                      />
+                      <span class="text-xs text-secondary">鈴木 太郎</span>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4">
+                    <span class="text-xs text-secondary">2023/11/28</span>
+                  </td>
+                  <td class="px-6 py-4 text-right">
+                    <div
+                      class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      <button
+                        class="p-2 text-secondary hover:text-primary hover:bg-primary-fixed rounded-lg transition-all"
+                        title="リネーム"
+                      >
+                        <span class="material-symbols-outlined text-[18px]"
+                          >edit</span
+                        >
+                      </button>
+                      <button
+                        class="p-2 text-secondary hover:text-primary hover:bg-primary-fixed rounded-lg transition-all"
+                        title="マージ"
+                      >
+                        <span class="material-symbols-outlined text-[18px]"
+                          >merge</span
+                        >
+                      </button>
+                      <button
+                        class="p-2 text-secondary hover:text-error hover:bg-error-container rounded-lg transition-all"
+                        title="アーカイブ"
+                      >
+                        <span class="material-symbols-outlined text-[18px]"
+                          >archive</span
+                        >
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <!-- Pagination -->
+          <div
+            class="px-6 py-4 bg-surface-container-low/50 flex items-center justify-between"
+          >
+            <p class="text-xs text-secondary">1,242個のタグ中 1-10を表示</p>
+            <div class="flex items-center gap-2">
+              <button
+                class="p-1 rounded hover:bg-surface-container-high text-secondary disabled:opacity-30"
+                disabled=""
+              >
+                <span class="material-symbols-outlined">chevron_left</span>
+              </button>
+              <span class="text-xs font-semibold px-2 text-primary">1</span>
+              <button
+                class="p-1 rounded hover:bg-surface-container-high text-secondary"
+              >
+                <span class="material-symbols-outlined">chevron_right</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <!-- Operational Governance Guidelines (Asymmetric Bento) -->
+        <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div
+            class="md:col-span-2 bg-primary text-white p-8 rounded-3xl relative overflow-hidden"
+          >
+            <div class="relative z-10">
+              <h3 class="text-2xl font-bold mb-4">タクソノミー・ガバナンス</h3>
+              <p
+                class="text-primary-fixed-dim max-w-md text-sm leading-relaxed mb-6"
+              >
+                タグは知識のアクセス性を高める重要な「静かなる案内人」です。新しいタグを作成する前に、既存のタグとの類似性がないか、グローバルな命名規則に従っているかを確認してください。
+              </p>
+              <div class="flex gap-4">
+                <div class="flex flex-col gap-1">
+                  <span
+                    class="text-xs font-bold text-white/60 uppercase tracking-widest"
+                    >命名基準</span
+                  >
+                  <span class="text-sm font-medium">snake_case_format</span>
+                </div>
+                <div class="w-[1px] bg-white/20"></div>
+                <div class="flex flex-col gap-1">
+                  <span
+                    class="text-xs font-bold text-white/60 uppercase tracking-widest"
+                    >承認フロー</span
+                  >
+                  <span class="text-sm font-medium">管理者レビュー必須</span>
+                </div>
+              </div>
+            </div>
+            <div
+              class="absolute -right-16 -bottom-16 w-64 h-64 bg-primary-container rounded-full blur-3xl opacity-50"
+            ></div>
+          </div>
+          <div
+            class="bg-tertiary-fixed p-6 rounded-3xl flex flex-col justify-between"
+          >
+            <div>
+              <span
+                class="material-symbols-outlined text-tertiary-container mb-4 text-3xl"
+                >shield</span
+              >
+              <h4 class="font-bold text-tertiary-container mb-2">安全措置</h4>
+              <p
+                class="text-[0.8125rem] text-on-tertiary-fixed-variant leading-relaxed"
+              >
+                大規模なマージ作業（100件以上のナレッジが対象）の場合、システムにより自動的にバックアップが作成されます。
+              </p>
+            </div>
+            <a
+              class="inline-flex items-center gap-1 text-xs font-bold text-tertiary-container hover:underline mt-4"
+              href="#"
+            >
+              ガイドラインを読む
+              <span class="material-symbols-outlined text-[16px]"
+                >arrow_forward</span
+              >
+            </a>
+          </div>
+        </div>
+      </section>
+      <!-- Floating Quick Support -->
+      <button
+        class="fixed bottom-8 right-8 w-14 h-14 bg-white shadow-2xl shadow-blue-900/20 rounded-full flex items-center justify-center text-primary hover:scale-105 transition-transform border border-outline-variant/10"
+      >
+        <span class="material-symbols-outlined">help_outline</span>
+      </button>
+    </main>
+    <!-- Visual Layering Element -->
+    <div
+      class="fixed top-0 right-0 w-1/3 h-screen bg-gradient-to-l from-blue-50/20 to-transparent pointer-events-none -z-10"
+    ></div>
+  </body>
+</html>

@@ -1,0 +1,468 @@
+<!doctype html>
+
+<html class="light" lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Manrope:wght@700;800&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "secondary-fixed-dim": "#bdc7db",
+              "error-container": "#ffdad6",
+              primary: "#002045",
+              "on-secondary-fixed-variant": "#3e4758",
+              background: "#f7f9fb",
+              "tertiary-fixed-dim": "#f2bc82",
+              "outline-variant": "#c4c6cf",
+              "on-tertiary-fixed-variant": "#633f0f",
+              "on-tertiary-container": "#c6955e",
+              "on-secondary-fixed": "#121c2b",
+              "primary-container": "#1a365d",
+              "on-secondary-container": "#5b6577",
+              "on-primary-fixed": "#001b3c",
+              "on-error": "#ffffff",
+              "surface-container-high": "#e6e8ea",
+              "surface-container-lowest": "#ffffff",
+              outline: "#74777f",
+              "on-secondary": "#ffffff",
+              "on-primary-fixed-variant": "#2d476f",
+              "surface-container": "#eceef0",
+              "surface-dim": "#d8dadc",
+              "surface-bright": "#f7f9fb",
+              "inverse-primary": "#adc7f7",
+              secondary: "#555f70",
+              error: "#ba1a1a",
+              "on-error-container": "#93000a",
+              "inverse-surface": "#2d3133",
+              "inverse-on-surface": "#eff1f3",
+              "on-tertiary": "#ffffff",
+              "secondary-fixed": "#d9e3f8",
+              tertiary: "#321b00",
+              "on-background": "#191c1e",
+              "primary-fixed": "#d6e3ff",
+              "tertiary-fixed": "#ffddba",
+              "surface-container-low": "#f2f4f6",
+              "surface-container-highest": "#e0e3e5",
+              "secondary-container": "#d9e3f8",
+              "on-tertiary-fixed": "#2b1700",
+              "surface-tint": "#455f88",
+              "on-primary": "#ffffff",
+              "primary-fixed-dim": "#adc7f7",
+              "on-surface": "#191c1e",
+              surface: "#f7f9fb",
+              "on-primary-container": "#86a0cd",
+              "tertiary-container": "#4f2e00",
+              "surface-variant": "#e0e3e5",
+              "on-surface-variant": "#43474e",
+            },
+            borderRadius: {
+              DEFAULT: "0.125rem",
+              lg: "0.25rem",
+              xl: "0.5rem",
+              full: "0.75rem",
+            },
+            fontFamily: {
+              headline: ["Manrope"],
+              body: ["Inter"],
+              label: ["Inter"],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      .material-symbols-outlined {
+        font-variation-settings:
+          "FILL" 0,
+          "wght" 400,
+          "GRAD" 0,
+          "opsz" 24;
+      }
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      h1,
+      h2,
+      h3 {
+        font-family: "Manrope", sans-serif;
+      }
+    </style>
+  </head>
+  <body class="bg-background text-on-background min-h-screen">
+    <!-- SideNavBar -->
+    <aside
+      class="fixed left-0 top-0 h-full flex flex-col py-4 z-40 bg-blue-950 w-64 shadow-xl shadow-blue-900/10"
+    >
+      <div class="px-6 mb-8">
+        <div class="flex items-center gap-3">
+          <div
+            class="w-8 h-8 bg-white/10 rounded flex items-center justify-center"
+          >
+            <span class="material-symbols-outlined text-white text-xl"
+              >account_tree</span
+            >
+          </div>
+          <div>
+            <div class="text-lg font-bold text-white">知識基盤</div>
+            <div
+              class="text-[10px] font-semibold text-blue-200/50 tracking-widest uppercase"
+            >
+              Enterprise KM
+            </div>
+          </div>
+        </div>
+      </div>
+      <nav class="flex-1 px-2 space-y-1">
+        <a
+          class="flex items-center gap-3 px-4 py-3 bg-blue-800 text-white rounded-lg mx-2 transition-transform translate-x-1"
+          href="#"
+        >
+          <span class="material-symbols-outlined">menu_book</span>
+          <span class="text-[0.6875rem] font-semibold tracking-wide">知識</span>
+        </a>
+        <a
+          class="flex items-center gap-3 px-4 py-3 text-blue-200/70 hover:text-white mx-2 hover:bg-blue-800/40 rounded-lg transition-all"
+          href="#"
+        >
+          <span class="material-symbols-outlined">quiz</span>
+          <span class="text-[0.6875rem] font-semibold tracking-wide">質問</span>
+        </a>
+        <a
+          class="flex items-center gap-3 px-4 py-3 text-blue-200/70 hover:text-white mx-2 hover:bg-blue-800/40 rounded-lg transition-all"
+          href="#"
+        >
+          <span class="material-symbols-outlined">bookmark</span>
+          <span class="text-[0.6875rem] font-semibold tracking-wide"
+            >ブックマーク</span
+          >
+        </a>
+        <a
+          class="flex items-center gap-3 px-4 py-3 text-blue-200/70 hover:text-white mx-2 hover:bg-blue-800/40 rounded-lg transition-all"
+          href="#"
+        >
+          <span class="material-symbols-outlined">notifications</span>
+          <span class="text-[0.6875rem] font-semibold tracking-wide">通知</span>
+        </a>
+        <a
+          class="flex items-center gap-3 px-4 py-3 text-blue-200/70 hover:text-white mx-2 hover:bg-blue-800/40 rounded-lg transition-all"
+          href="#"
+        >
+          <span class="material-symbols-outlined">settings_suggest</span>
+          <span class="text-[0.6875rem] font-semibold tracking-wide"
+            >管理者設定</span
+          >
+        </a>
+      </nav>
+      <div class="px-4 mt-auto">
+        <button
+          class="w-full py-3 bg-primary-container text-white rounded-lg font-semibold text-sm flex items-center justify-center gap-2 hover:bg-blue-800 transition-colors"
+        >
+          <span class="material-symbols-outlined">add</span>
+          新規作成
+        </button>
+      </div>
+    </aside>
+    <!-- Main Content Area -->
+    <main class="ml-64 min-h-screen">
+      <!-- TopNavBar -->
+      <header
+        class="flex justify-between items-center px-8 h-16 w-full bg-slate-50 sticky top-0 z-30"
+      >
+        <div class="flex items-center gap-4">
+          <div class="text-blue-900 text-xl font-bold tracking-tight">
+            ワークスペース
+          </div>
+          <div class="h-4 w-[1px] bg-outline-variant mx-2"></div>
+          <div class="text-sm text-on-surface-variant font-medium">
+            公式ナレッジの改訂
+          </div>
+        </div>
+        <div class="flex items-center gap-6">
+          <div class="relative group">
+            <span
+              class="material-symbols-outlined text-slate-500 hover:bg-slate-200/50 p-2 rounded-full cursor-pointer transition-colors"
+              >notifications</span
+            >
+            <span
+              class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full border-2 border-slate-50"
+            ></span>
+          </div>
+          <span
+            class="material-symbols-outlined text-slate-500 hover:bg-slate-200/50 p-2 rounded-full cursor-pointer transition-colors"
+            >rate_review</span
+          >
+          <div
+            class="w-8 h-8 rounded-full overflow-hidden border border-outline-variant"
+          >
+            <img
+              alt="User avatar"
+              class="w-full h-full object-cover"
+              data-alt="Professional headshot of a team member with a warm and focused expression"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuDo9vBZJu61U6xUAeqUr3TZItZv-yOqAwg_ibIaMaNzvro2hb-G4Oa4xYPvzPVT6YYEQoWILqVcwgyLVetQ54lcJGSuajb7O1uZeqtb0DqFjuFI4PhndCIrKq99lelcrQRDqAVC-ztrlgm7C5r1cJk-FIMn6UMa1NmGMrBTo0N66nDf_WBWRsi6DPXtLGa68kTlN2SMI_ssWhufQCupdFTz-15jcthOL8dBZwP-nQWD4MmwD8_tuYsQtEwG25OnIgIuu_8dVnar6Zg"
+            />
+          </div>
+        </div>
+      </header>
+      <!-- Canvas Area -->
+      <div class="p-10 max-w-6xl mx-auto">
+        <!-- Page Header Section -->
+        <section class="mb-12">
+          <div
+            class="inline-flex items-center px-3 py-1 rounded-full bg-primary-fixed text-on-primary-fixed text-[0.6875rem] font-bold mb-4 tracking-wider uppercase"
+          >
+            Revision Flow
+          </div>
+          <h1
+            class="text-[2rem] font-extrabold text-primary leading-tight mb-4"
+          >
+            公式ナレッジの編集ドラフト作成
+          </h1>
+          <p
+            class="text-on-surface-variant text-base max-w-2xl leading-relaxed"
+          >
+            既存の公式ドキュメントをベースに、新しい提案を作成します。現在の公式版は影響を受けず、承認されるまで「ドラフト」として管理されます。
+          </p>
+        </section>
+        <!-- Bento Layout for Content Protection Visibility -->
+        <div class="grid grid-cols-12 gap-6">
+          <!-- Target Document Status Card (L-Size) -->
+          <div
+            class="col-span-8 bg-surface-container-lowest rounded-xl p-8 shadow-sm border border-outline-variant/10"
+          >
+            <div class="flex items-start justify-between mb-8">
+              <div>
+                <div
+                  class="text-[0.6875rem] font-bold text-on-secondary-container mb-1 uppercase tracking-widest"
+                >
+                  Target Document
+                </div>
+                <h2 class="text-xl font-bold text-primary">
+                  社内セキュリティガイドライン 2024年度版
+                </h2>
+              </div>
+              <div
+                class="flex items-center gap-2 px-3 py-1 bg-green-50 text-green-700 rounded border border-green-100"
+              >
+                <span
+                  class="material-symbols-outlined text-sm"
+                  style="font-variation-settings: &quot;FILL&quot; 1"
+                  >verified</span
+                >
+                <span class="text-[0.6875rem] font-bold">公式版公開中</span>
+              </div>
+            </div>
+            <div class="space-y-6">
+              <div
+                class="p-6 bg-surface-container-low rounded-lg border-l-4 border-primary"
+              >
+                <h3
+                  class="text-sm font-bold text-primary mb-2 flex items-center gap-2"
+                >
+                  <span class="material-symbols-outlined text-lg">info</span>
+                  編集ポリシー
+                </h3>
+                <p class="text-sm text-on-surface-variant leading-relaxed">
+                  この文書は公式ナレッジとして保護されています。編集を行うと自動的に**改訂ドラフト**が生成され、レビュアーによる承認後に公式版が更新されます。既存の公式版は、承認が完了するまで全ユーザーに対して引き続き表示されます。
+                </p>
+              </div>
+              <div class="grid grid-cols-3 gap-4 py-4">
+                <div class="space-y-1">
+                  <div class="text-[0.6875rem] text-on-surface-variant">
+                    最終更新者
+                  </div>
+                  <div class="text-sm font-medium">
+                    田中 健一 (Security Lead)
+                  </div>
+                </div>
+                <div class="space-y-1">
+                  <div class="text-[0.6875rem] text-on-surface-variant">
+                    最終更新日
+                  </div>
+                  <div class="text-sm font-medium">2023年12月15日</div>
+                </div>
+                <div class="space-y-1">
+                  <div class="text-[0.6875rem] text-on-surface-variant">
+                    バージョン
+                  </div>
+                  <div class="text-sm font-medium">v2.4.0</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Summary/Meta Card (R-Size) -->
+          <div
+            class="col-span-4 bg-primary text-white rounded-xl p-8 flex flex-col justify-between overflow-hidden relative shadow-lg"
+          >
+            <div
+              class="absolute -top-10 -right-10 w-40 h-40 bg-white/5 rounded-full blur-3xl"
+            ></div>
+            <div class="relative z-10">
+              <span
+                class="material-symbols-outlined text-4xl mb-4 text-blue-200"
+                >edit_document</span
+              >
+              <h3 class="text-lg font-bold mb-4">改訂の目的を明確にする</h3>
+              <p class="text-sm text-blue-100/80 leading-relaxed mb-6">
+                ドラフト作成後、具体的な修正内容を記述してください。承認プロセスを経て、より洗練された「知」へと昇華させます。
+              </p>
+            </div>
+            <div class="relative z-10 space-y-4">
+              <div class="flex items-center gap-3">
+                <div
+                  class="w-8 h-8 rounded-full bg-blue-800 flex items-center justify-center text-[10px] font-bold"
+                >
+                  1
+                </div>
+                <span class="text-xs font-medium">ドラフトの作成</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <div
+                  class="w-8 h-8 rounded-full border border-blue-700 flex items-center justify-center text-[10px] font-bold text-blue-400"
+                >
+                  2
+                </div>
+                <span class="text-xs font-medium text-blue-300"
+                  >内容の編集・推敲</span
+                >
+              </div>
+              <div class="flex items-center gap-3">
+                <div
+                  class="w-8 h-8 rounded-full border border-blue-700 flex items-center justify-center text-[10px] font-bold text-blue-400"
+                >
+                  3
+                </div>
+                <span class="text-xs font-medium text-blue-300"
+                  >承認リクエスト</span
+                >
+              </div>
+            </div>
+          </div>
+          <!-- Input Section (Middle) -->
+          <div
+            class="col-span-12 bg-surface-container-lowest rounded-xl p-8 border border-outline-variant/10 shadow-sm mt-2"
+          >
+            <div class="max-w-3xl">
+              <label
+                class="block text-[0.6875rem] font-bold text-on-surface-variant mb-3 tracking-widest uppercase"
+                >Draft Reason / 編集理由（必須）</label
+              >
+              <textarea
+                class="w-full bg-surface-container-low border-0 rounded-lg focus:ring-2 focus:ring-primary text-on-surface p-4 text-sm placeholder:text-outline"
+                placeholder="例：2024年のリモートワーク規定更新に伴うパスワード要件の変更を提案します..."
+                rows="4"
+              ></textarea>
+              <div class="mt-8 flex items-center justify-between">
+                <div
+                  class="flex items-center gap-4 text-sm text-on-surface-variant"
+                >
+                  <label class="flex items-center gap-2 cursor-pointer">
+                    <input
+                      class="rounded text-primary focus:ring-primary border-outline-variant"
+                      type="checkbox"
+                    />
+                    <span>作成後にすぐ編集を開始する</span>
+                  </label>
+                </div>
+                <div class="flex items-center gap-4">
+                  <button
+                    class="px-6 py-2.5 text-sm font-semibold text-secondary hover:bg-surface-container-high transition-colors rounded-lg"
+                  >
+                    キャンセル
+                  </button>
+                  <button
+                    class="px-8 py-2.5 bg-primary text-white text-sm font-bold rounded-lg shadow-md hover:shadow-lg transition-all flex items-center gap-2"
+                  >
+                    <span class="material-symbols-outlined text-lg"
+                      >rocket_launch</span
+                    >
+                    ドラフトを作成
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Context Info / Related Knowledge -->
+        <section class="mt-16 border-t border-surface-container-highest pt-8">
+          <h4
+            class="text-[0.6875rem] font-bold text-on-surface-variant mb-6 tracking-widest uppercase"
+          >
+            Related Information / 関連情報
+          </h4>
+          <div class="grid grid-cols-3 gap-6">
+            <div class="group cursor-pointer">
+              <div class="w-full h-32 rounded-lg overflow-hidden mb-3 relative">
+                <img
+                  class="w-full h-full object-cover transition-transform group-hover:scale-105 duration-500"
+                  data-alt="Modern workspace with high-end tech equipment and clean wooden desk surface"
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuDbhJc-VCYC7rHjv5kTynlgwjCNKmZcXTTz0iCqh_SV0l7a00J9m-n1X5GvrShpa1F8D8BlPAR_ma2ur_L6HHOfopygEw0K1pcXrPubk-JFWdF7DJuJ3k8OzJqjU9OSpt8CTpijnGI5Jrk-R0LrkcON6rCcvGAt6Ck9OakFORiiAjLBHdCmqTDId-sdRbgWOEAtsobO89EaiiKGzZ79RdQIHpHFMwJpli3iMZxqwDB9aphtcDFGoVghgQIk09limui45y-q3rFQhLI"
+                />
+                <div
+                  class="absolute inset-0 bg-primary/20 group-hover:bg-transparent transition-colors"
+                ></div>
+              </div>
+              <div class="text-xs font-bold text-primary mb-1">
+                改訂履歴の確認
+              </div>
+              <div class="text-[10px] text-on-surface-variant">
+                過去の変更点と議論を確認できます
+              </div>
+            </div>
+            <div class="group cursor-pointer">
+              <div class="w-full h-32 rounded-lg overflow-hidden mb-3 relative">
+                <img
+                  class="w-full h-full object-cover transition-transform group-hover:scale-105 duration-500"
+                  data-alt="Person collaborating on digital interface with blue glowing data elements"
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuCVus5VXgh8qUC5c2RPp1CfQZpaHpJzvTOOstP1qY5cuxLf0TBmVHQzZ4EpuW95QGCi9_fh34m2M_nnGyrnw3NybddkM55RUUHWxyjPXi6vcwdx_68QyRFV0eX8zXVlMOlLfRohnHcf-4KttsO33T77FnoBrHKpup_NQgQ2e3q-7kxpZo3f7cQQItzBfPuNbymDz64IW617ZtmEejiP0KJkFa2FaIL7n1-wL0_PoKpL__5LtCbu-OZ4LBAAj0e5ezTCKOZuf596YpM"
+                />
+                <div
+                  class="absolute inset-0 bg-primary/20 group-hover:bg-transparent transition-colors"
+                ></div>
+              </div>
+              <div class="text-xs font-bold text-primary mb-1">
+                承認プロセスの詳細
+              </div>
+              <div class="text-[10px] text-on-surface-variant">
+                このカテゴリの承認権限者と手順を確認
+              </div>
+            </div>
+            <div class="group cursor-pointer">
+              <div class="w-full h-32 rounded-lg overflow-hidden mb-3 relative">
+                <img
+                  class="w-full h-full object-cover transition-transform group-hover:scale-105 duration-500"
+                  data-alt="Team of professionals in a minimalist bright office discussing over documents"
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuDYldpO7F4IXyG0RcuAfTnUlj6tvPJhGUNQJBrWHE4RCTEb9_UVHlDcV-a5LuPmG6IB4FcwxRo3rJQBGxZ3jeApLyDFvoIZMI4ccOBTuSJ6MLAoyD0eWFbaUDkjT-7jQoXvo1H-OOZCbht8D5xaGB9f2nAC9W8FVQeLVwIvUg4Yrc6hS63B4zegbe40okZlvWcn0shi1vxb0Dez03HAaq1OKn9SlQIHiEKneaEjyXpr8CF3dSD68enZlTrz1PbxgMr5-j9S3E02tgk"
+                />
+                <div
+                  class="absolute inset-0 bg-primary/20 group-hover:bg-transparent transition-colors"
+                ></div>
+              </div>
+              <div class="text-xs font-bold text-primary mb-1">
+                他者の進行中ドラフト
+              </div>
+              <div class="text-[10px] text-on-surface-variant">
+                現在検討されている他の修正案（2件）
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </body>
+</html>

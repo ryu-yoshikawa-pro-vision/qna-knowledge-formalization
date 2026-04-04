@@ -1,0 +1,287 @@
+<!doctype html>
+
+<html class="light" lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>ワークスペースへの招待 - Knowledge Infrastructure</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Manrope:wght@700;800&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "secondary-fixed-dim": "#bdc7db",
+              "error-container": "#ffdad6",
+              primary: "#002045",
+              "on-secondary-fixed-variant": "#3e4758",
+              background: "#f7f9fb",
+              "tertiary-fixed-dim": "#f2bc82",
+              "outline-variant": "#c4c6cf",
+              "on-tertiary-fixed-variant": "#633f0f",
+              "on-tertiary-container": "#c6955e",
+              "on-secondary-fixed": "#121c2b",
+              "primary-container": "#1a365d",
+              "on-secondary-container": "#5b6577",
+              "on-primary-fixed": "#001b3c",
+              "on-error": "#ffffff",
+              "surface-container-high": "#e6e8ea",
+              "surface-container-lowest": "#ffffff",
+              outline: "#74777f",
+              "on-secondary": "#ffffff",
+              "on-primary-fixed-variant": "#2d476f",
+              "surface-container": "#eceef0",
+              "surface-dim": "#d8dadc",
+              "surface-bright": "#f7f9fb",
+              "inverse-primary": "#adc7f7",
+              secondary: "#555f70",
+              error: "#ba1a1a",
+              "on-error-container": "#93000a",
+              "inverse-surface": "#2d3133",
+              "inverse-on-surface": "#eff1f3",
+              "on-tertiary": "#ffffff",
+              "secondary-fixed": "#d9e3f8",
+              tertiary: "#321b00",
+              "on-background": "#191c1e",
+              "primary-fixed": "#d6e3ff",
+              "tertiary-fixed": "#ffddba",
+              "surface-container-low": "#f2f4f6",
+              "surface-container-highest": "#e0e3e5",
+              "secondary-container": "#d9e3f8",
+              "on-tertiary-fixed": "#2b1700",
+              "surface-tint": "#455f88",
+              "on-primary": "#ffffff",
+              "primary-fixed-dim": "#adc7f7",
+              "on-surface": "#191c1e",
+              surface: "#f7f9fb",
+              "on-primary-container": "#86a0cd",
+              "tertiary-container": "#4f2e00",
+              "surface-variant": "#e0e3e5",
+              "on-surface-variant": "#43474e",
+            },
+            borderRadius: {
+              DEFAULT: "0.125rem",
+              lg: "0.25rem",
+              xl: "0.5rem",
+              full: "0.75rem",
+            },
+            fontFamily: {
+              headline: ["Manrope"],
+              body: ["Inter"],
+              label: ["Inter"],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      .material-symbols-outlined {
+        font-variation-settings:
+          "FILL" 0,
+          "wght" 400,
+          "GRAD" 0,
+          "opsz" 24;
+      }
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      h1,
+      h2,
+      h3 {
+        font-family: "Manrope", sans-serif;
+      }
+      .glass-effect {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(20px);
+      }
+    </style>
+  </head>
+  <body
+    class="bg-background text-on-surface min-h-screen flex flex-col items-center justify-center p-6"
+  >
+    <!-- Content Area: Center Focused for Invitation Journey -->
+    <main class="w-full max-w-2xl">
+      <!-- Branding Header -->
+      <div class="text-center mb-12">
+        <div class="inline-flex items-center gap-3 mb-4">
+          <div
+            class="w-12 h-12 bg-primary rounded-xl flex items-center justify-center text-white shadow-xl shadow-primary/10"
+          >
+            <span class="material-symbols-outlined" data-icon="menu_book"
+              >menu_book</span
+            >
+          </div>
+          <span class="text-2xl font-extrabold tracking-tight text-primary"
+            >知識基盤</span
+          >
+        </div>
+        <h1
+          class="text-3xl md:text-4xl font-extrabold text-on-surface leading-tight"
+        >
+          ワークスペースへの招待を受け取りました
+        </h1>
+      </div>
+      <!-- Invitation Card -->
+      <div
+        class="bg-surface-container-lowest rounded-xl shadow-[0_12px_40px_rgba(0,27,60,0.05)] overflow-hidden transition-all duration-300"
+      >
+        <!-- Hero Visual Section -->
+        <div class="relative h-48 bg-primary-container overflow-hidden">
+          <img
+            alt="Office architectural perspective"
+            class="w-full h-full object-cover opacity-60"
+            data-alt="Modern minimalist architectural interior with clean lines and soft daylight reflecting on polished surfaces"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDa_BwT-1LpWBpKIAFvMqJzt3z1eKahKJK-XW2iSHD51gndMeDu4VGfOqkg_hfPK5nOr5KrGGu23J1oAgYQVuVc4a1R1AQqlCcb7_DxPwKy6JcfGicXIIeI3MrvNL5rJgxRjRNMKUw7OiJ2j4ohy-Xngj1qw-I3wR3YRgniHmgrB0HxRepIZ-5BwhlBf7mNXGxcOlBLOjX5U5_g-sZLY-QmOwSq8B7Eb5HR1QFcFAOV1_Ffa2aEm-mrkG9MLKSdYWIsgW3SASP7jM8"
+          />
+          <div
+            class="absolute inset-0 bg-gradient-to-t from-primary-container via-transparent to-transparent"
+          ></div>
+          <div class="absolute bottom-6 left-8 flex items-center gap-4">
+            <div
+              class="w-16 h-16 rounded-lg bg-surface-container-lowest flex items-center justify-center shadow-lg"
+            >
+              <img
+                alt="Company Logo"
+                class="w-10 h-10 object-contain"
+                data-alt="Abstract corporate geometric logo in deep navy blue on a white background"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuCumitIMhCxYcKI5ouo8gNVmD1CJUsTSjlvlZ49PIgEKcUUy50O406Sz4G7E5D4q8lRAe8QYgeeSrcViP_BhoKnxuUHWvWCCChOlK_khl0zL2fIVOkBx-agt74GAzKhL2RyIA2O6nfFZVy8yeNDpUGQ9zwt4s1-J1sLjq8nGGQiIlSc2HHYqAUQult0lV-XqLCQvgTYToXarM-heJ2ZnZ_lpyHrbBQe3TgQ0WihhKSKXkEGf-KSWy6eHERY_FXwYoaSk0HI9J5HSVU"
+              />
+            </div>
+            <div>
+              <p
+                class="text-white/70 text-xs font-semibold tracking-wider uppercase"
+              >
+                INVITATION FROM
+              </p>
+              <p class="text-white text-xl font-bold">
+                グローバル・ストラテジー・ラボ
+              </p>
+            </div>
+          </div>
+        </div>
+        <!-- Content Details -->
+        <div class="p-8 md:p-10">
+          <div class="flex flex-col gap-8">
+            <!-- Invitation Text -->
+            <div class="flex gap-4">
+              <div class="flex-shrink-0">
+                <img
+                  alt="Inviter Avatar"
+                  class="w-12 h-12 rounded-full border-2 border-surface-container"
+                  data-alt="Professional headshot of a smiling middle-aged man in a business suit against a blurred office background"
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuBGs-8wA-eyRKnoB4bX5alPfZhtlNb33URe7PSfxR8Qp2xDg9vmxpdq6hN0iLSCRIN8U48GmeCIVyXPXZC7Y6n0UlVlb6LqMyAQmF8DbeG-dwuT4rPfvMgFU9SbkbIpJDT2cij3lQylZCct1eONBjgu4N_0Jb-jTes6XxcYohLElHoB0LvwZOSX1WfAOV44clz4kcmOw5rXPM376r7qHRxuyO5G-3r4is8ZaSpDBloaQttzYfjA0i0MLBe72KEDJ3tfbdzVwzYIKDA"
+                />
+              </div>
+              <div class="space-y-1">
+                <p class="text-on-surface-variant leading-relaxed">
+                  <span class="font-bold text-on-surface">佐藤 健一</span>
+                  さんが、あなたを「グローバル・ストラテジー・ラボ」の知識基盤ワークスペースに招待しました。
+                </p>
+                <p class="text-on-secondary-container text-sm">
+                  「新しいプロジェクトのナレッジ共有を開始しましょう。」
+                </p>
+              </div>
+            </div>
+            <!-- Role and Permissions Bento Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="bg-surface-container-low p-5 rounded-lg">
+                <div class="flex items-center gap-2 mb-3 text-primary">
+                  <span
+                    class="material-symbols-outlined text-[20px]"
+                    data-icon="badge"
+                    >badge</span
+                  >
+                  <span class="text-xs font-bold tracking-wide uppercase"
+                    >割り当てられた役割</span
+                  >
+                </div>
+                <p class="text-lg font-bold text-on-surface">エディター</p>
+                <p class="text-xs text-on-surface-variant mt-1 leading-relaxed">
+                  記事の作成、編集、およびドキュメントの整理が可能です。
+                </p>
+              </div>
+              <div class="bg-surface-container-low p-5 rounded-lg">
+                <div class="flex items-center gap-2 mb-3 text-primary">
+                  <span
+                    class="material-symbols-outlined text-[20px]"
+                    data-icon="event"
+                    >event</span
+                  >
+                  <span class="text-xs font-bold tracking-wide uppercase"
+                    >招待の有効期限</span
+                  >
+                </div>
+                <p class="text-lg font-bold text-on-surface">あと 3 日</p>
+                <p class="text-xs text-on-surface-variant mt-1">
+                  2023年11月24日まで有効です。
+                </p>
+              </div>
+            </div>
+            <!-- Actions -->
+            <div
+              class="flex flex-col sm:flex-row gap-4 pt-4 border-t border-surface-container-high border-dashed"
+            >
+              <button
+                class="flex-1 bg-primary text-white font-bold py-4 px-8 rounded-lg hover:bg-primary-container transition-all shadow-lg shadow-primary/10 flex items-center justify-center gap-2"
+              >
+                招待を承諾する
+                <span
+                  class="material-symbols-outlined"
+                  data-icon="arrow_forward"
+                  >arrow_forward</span
+                >
+              </button>
+              <button
+                class="sm:w-auto px-8 py-4 text-on-surface-variant font-semibold hover:bg-surface-container-high transition-colors rounded-lg border border-transparent"
+              >
+                辞退する
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Info / Disclaimer Section -->
+      <div class="mt-8 px-4 text-center">
+        <p
+          class="text-xs text-on-secondary-container leading-relaxed max-w-md mx-auto"
+        >
+          承諾すると、利用規約およびプライバシーポリシーに同意したことになります。アカウントをお持ちでない場合は、承諾後に作成画面へ移動します。
+        </p>
+      </div>
+      <!-- Alternate State: Expired Invitation (Hidden by default, shown for reference/structure) -->
+      <!-- 
+        <div class="mt-12 bg-error-container/20 border border-error-container p-6 rounded-xl flex items-start gap-4">
+            <span class="material-symbols-outlined text-error" data-icon="warning">warning</span>
+            <div>
+                <h3 class="font-bold text-on-error-container mb-1">この招待リンクは無効です</h3>
+                <p class="text-sm text-on-error-container/80 leading-relaxed">
+                    有効期限が切れているか、既に使用されています。ワークスペースの管理者に新しい招待リンクの発行を依頼してください。
+                </p>
+                <button class="mt-4 text-sm font-bold text-error underline underline-offset-4">
+                    ログイン画面へ戻る
+                </button>
+            </div>
+        </div>
+        -->
+    </main>
+    <!-- Footer Meta -->
+    <footer
+      class="mt-16 text-on-secondary-container/50 text-[10px] font-semibold tracking-[0.2em] uppercase"
+    >
+      Knowledge Infrastructure • Enterprise Knowledge Management System
+    </footer>
+  </body>
+</html>
