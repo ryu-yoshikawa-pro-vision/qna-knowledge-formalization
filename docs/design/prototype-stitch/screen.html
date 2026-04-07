@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Prototype Stitch Viewer</title>
+    <link rel="stylesheet" href="./assets/stitch-frame.css" />
+  </head>
+  <body data-app="screen">
+    <div id="screen-shell" class="screen-shell">
+      <iframe
+        id="stitch-frame"
+        class="stitch-frame"
+        title="Google Stitch screen preview"
+        loading="eager"
+      ></iframe>
+    </div>
+
+    <template id="route-error-template">
+      <main class="error-shell">
+        <p class="eyebrow">Prototype Stitch</p>
+        <h1>screen route が見つかりません</h1>
+        <p class="hero-copy">
+          <a href="./index.html">index.html</a> から有効な screen を選択してください。
+        </p>
+      </main>
+    </template>
+
+    <script type="module" src="./assets/stitch-wireup.js"></script>
+  </body>
+</html>

@@ -2,3 +2,4 @@
 .codex/runs/*
 !.codex/runs/
 !.codex/runs/.gitkeep
+.tmp-playwright

@@ -7,6 +7,13 @@
 
 UI 全体は、コミュニティサービスではなく、**組織内ナレッジ基盤**として見える必要がある。
 
+### 1.1 Spec Alignment
+- 振る舞い、画面責務、state、role、API、table traceability、acceptance は `docs/spec/` を正本として扱う。
+- 共通 UI、基本 flow、禁止 UI のうち挙動に影響するものは `docs/spec/画面仕様書.md` を参照する。
+- action、badge、role 別制御を追加・変更する前に `docs/spec/状態遷移仕様.md` と `docs/spec/権限マトリクス.md` を確認する。
+- prototype review では `docs/spec/画面APIデータ対応表.md` と `docs/spec/受け入れ基準.md` を使って API、副作用、Scenario 1〜10 の coverage を確認する。
+- `docs/design/Google Stitch/blueprint_enterprise/DESIGN.md` は exploratory reference であり、この文書や `docs/spec/` を上書きしない。
+
 ---
 
 ## 2. Core Design Principles

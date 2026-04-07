@@ -7,6 +7,13 @@ Its purpose is to turn internal questions, answers, and direct knowledge posts i
 
 The overall UI must feel like an **internal knowledge infrastructure**, not a community or social platform.
 
+### 1.1 Spec Alignment
+- `docs/spec/` is the behavioral source of truth for screen responsibility, state, role, API, table traceability, and acceptance.
+- Use `docs/spec/画面仕様書.md` for common UI requirements, flow priority, and prohibited UI that affects behavior.
+- Use `docs/spec/状態遷移仕様.md` and `docs/spec/権限マトリクス.md` before adding any action, badge, or role-specific control.
+- Use `docs/spec/画面APIデータ対応表.md` and `docs/spec/受け入れ基準.md` to validate that design prototypes still cover required APIs, side effects, and Scenario 1 through 10.
+- `docs/design/Google Stitch/blueprint_enterprise/DESIGN.md` is exploratory reference only and must not override this file or `docs/spec/`.
+
 ---
 
 ## 2. Core Design Principles

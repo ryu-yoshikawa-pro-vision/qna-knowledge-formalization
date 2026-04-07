@@ -1,0 +1,42 @@
+:root {
+  color-scheme: light;
+  --bg: #f4f7fb;
+  --surface: #ffffff;
+  --surface-soft: #eef3f8;
+  --surface-strong: #e3ebf6;
+  --border: #d1dae8;
+  --border-strong: #adc0db;
+  --text: #172033;
+  --text-muted: #53627a;
+  --text-soft: #73839b;
+  --primary: #164b8a;
+  --primary-strong: #0d3567;
+  --primary-soft: #dbe7f8;
+  --success: #2b6b4e;
+  --success-soft: #ddefe5;
+  --warning: #9c6a1f;
+  --warning-soft: #f7ecd7;
+  --danger: #a33c34;
+  --danger-soft: #fae1de;
+  --info: #37679d;
+  --info-soft: #e1ebf8;
+  --archived: #6d7584;
+  --archived-soft: #e8ebf0;
+  --shadow: 0 18px 40px rgba(16, 39, 70, 0.08);
+  --shadow-soft: 0 12px 30px rgba(16, 39, 70, 0.05);
+  --radius-lg: 24px;
+  --radius-md: 16px;
+  --radius-sm: 10px;
+  --space-1: 6px;
+  --space-2: 10px;
+  --space-3: 14px;
+  --space-4: 18px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 40px;
+  --max-page: 1240px;
+  --font-body: "Inter", "Segoe UI", sans-serif;
+  --font-heading: "Manrope", "Segoe UI", sans-serif;
+}
+
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap");
