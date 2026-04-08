@@ -2,81 +2,89 @@
 
 ## 1. 目的
 
-`docs/design/prototype/` は `docs/spec/` に整合する static multi-page demo である。runtime backend は使わず、query parameter と mock data で role / actor / state を切り替える。
+`docs/design/prototype/` は Google Stitch の raw export を見た目優先で保持しながら、`docs/spec/` と `docs/design/screen-map.md` に沿って画面遷移と最低限の state / role-aware 制御を付与した static multi-page prototype である。
 
 ## 2. 構成
 
 - `index.html`
-  - 20 画面への launcher と Scenario 1〜10 の確認入口
-- `assets/tokens.css`
-  - 色、タイポ、spacing、badge 用 token
-- `assets/base.css`
-  - app shell、table、editor、detail、gateway の共通 style
+  - 20 route と Scenario 1〜10 の launcher
 - `assets/routes.js`
-  - screen route manifest と Scenario 1〜10 の導線定義
+  - route manifest、raw export path、fixture/state/tab/modal の定義
 - `assets/mock-state.js`
-  - role / actor / preset / badge count / query helper
+  - query param の解決、fixture 判定、href 生成
 - `assets/mock-data.js`
-  - 各 screen の mock content、actions、validation note
+  - state overlay と `question.detail` history panel の文言
 - `assets/prototype.js`
-  - 共通 renderer
+  - iframe viewer、rewiring、state overlay、tab filter、permission-safe patch
+- `assets/tokens.css`
+  - shared token
+- `assets/base.css`
+  - index と viewer shell の style
 - `*.html`
-  - 20 screen ID に対応する wrapper page
+  - `screen-map.md` の `route_slug` に一致する 20 wrapper page
+  - shared asset には content hash query を付け、ローカル検証時の stale cache を避ける
+- `tools/build_stitch_prototype.py`
+  - wrapper page と `assets/routes.js` の再生成スクリプト
 
-## 3. Route Rules
+## 3. Query Parameters
 
-- 正規名は `screen_id`
-- filename は `route_slug + ".html"`
-- `index.html` 以外は `body[data-screen]` で screen ID を指定する
-- signed-in screen では `?role=owner|admin|reviewer|member` を使う
-- pre-membership screen では `?actor=unaffiliated%20authenticated%20user|invitation%20target%20user|join%20request%20applicant` を使う
-- state variation は `?preset=<name>` を使う
+- `fixture`
+  - signed-in route: `owner | admin | reviewer | member`
+  - gateway route: `unaffiliated-user | invitation-target-user | join-request-applicant`
+- `state`
+  - route ごとに `assets/routes.js` が許可する state を使う
+- `tab`
+  - `admin-members`: `members | invitations | join-requests`
+  - `admin-tags`: `active | merged | archived`
+- `modal`
+  - `question-detail`: `history`
 
-## 4. Role / Actor Fixture
+未指定時は各 route の `defaultFixture` / `defaultState` / `defaultTab` を使う。
 
-### signed-in role
+## 4. Prototype Rules
 
-- `owner`
-- `admin`
-- `reviewer`
-- `member`
+- raw export 自体は編集せず、prototype 側が same-origin iframe 上で rewiring する
+- `href="#"` は runtime で実 route または current route に置換する
+- mutation は実行しない
+- `loading / empty / error / permission-denied` は overlay で表現する
+- `question.detail` の履歴は別 route を作らず side panel で表現する
+- `admin.members` は `Members / Invitations / Join Requests` の 3 subsection を持つ
 
-### pre-membership actor
+## 5. Scenario 1〜10
 
-- `unaffiliated authenticated user`
-- `invitation target user`
-- `join request applicant`
+| Scenario | Start |
+| --- | --- |
+| 1. 初回ログインから workspace 作成 | `auth-login.html` |
+| 2. 招待、再送、受諾 | `admin-members.html?fixture=owner&tab=invitations` |
+| 3. 直接投稿 knowledge の review / formalize | `knowledge-create.html?fixture=member` |
+| 4. formal knowledge の edit draft 作成から apply | `knowledge-detail.html?fixture=member&state=formal` |
+| 5. 質問、回答、ベストアンサー、再オープン | `question-create.html?fixture=member` |
+| 6. Q&A から knowledge 作成 | `question-detail.html?fixture=member&state=reopened` |
+| 7. タグ統合、検索、通知、レビュー待ちバッジ | `admin-tags.html?fixture=admin&state=merge` |
+| 8. login / refresh / logout と共通ヘッダー | `auth-login.html` |
+| 9. 参加申請コメント、取消、コメント編集 / 非表示 | `workspace-join-request.html?fixture=join-request-applicant` |
+| 10. 履歴導線と二重実行耐性 | `question-detail.html?fixture=member&modal=history` |
 
-## 5. Scenario 1〜10 の確認導線
+## 6. 再生成手順
 
-| Scenario | 開始 route | 確認ポイント |
-| --- | --- | --- |
-| 1. 初回ログインから workspace 作成 | `auth-login.html` | `workspace-resolution.html?preset=create-path` 経由で `knowledge-list.html` に到達する |
-| 2. 招待、再送、受諾 | `admin-members.html?role=owner&preset=invitations` | `workspace-invitation-accept.html?preset=preview` と `accepted` を確認する |
-| 3. 直接投稿 knowledge の review / formalize | `knowledge-create.html?role=member&preset=request-review` | `knowledge-detail.html?preset=review-requested` → `review-queue.html?role=reviewer` → `knowledge-detail.html?role=admin&preset=formal` |
-| 4. formal knowledge の edit draft 作成から apply | `knowledge-detail.html?role=member&preset=formal` | `knowledge-edit-draft-create.html` → `knowledge-edit-draft-detail.html?preset=review-requested` → `knowledge-detail.html?role=admin&preset=formal` |
-| 5. 質問、回答、ベストアンサー、再オープン | `question-create.html?role=member` | `question-detail.html?preset=open` → `resolved` → `reopened` |
-| 6. Q&A から knowledge 作成 | `question-detail.html?preset=reopened` | `knowledge-create.html?preset=qa-derived` を確認する |
-| 7. タグ統合、検索、通知、レビュー待ちバッジ | `admin-tags.html?role=admin&preset=merge` | `knowledge-list.html?role=reviewer` の badge と `notification-list.html` を確認する |
-| 8. login / refresh / logout と共通ヘッダー | `auth-login.html` | `knowledge-list.html` 以降の header badge と `notification-list.html` を確認する |
-| 9. 参加申請コメント、取消、コメント編集 / 非表示 | `workspace-join-request.html?preset=pending` | `admin-members.html?preset=join-requests` と `knowledge-detail.html?preset=formal` の comment area を確認する |
-| 10. 履歴導線と二重実行耐性 | `question-detail.html?preset=history` | 同画面内 side panel、`bookmark-list.html`、`admin-members.html?preset=invitations`、`notification-list.html?preset=read-all` を確認する |
+1. `python docs/design/prototype/tools/build_stitch_prototype.py`
+2. `docs/design/prototype/index.html` と 20 wrapper が再生成される
+3. `docs/design/prototype/assets/routes.js` が route manifest で更新される
+4. wrapper の asset query も content hash に合わせて更新される
 
-## 6. 確認チェックリスト
+## 7. 確認チェックリスト
 
-- 20 route すべてが `index.html` から開ける
-- `question.detail` の履歴は同一画面内 panel で確認できる
-- `admin.members` に `Members / Invitations / Join Requests` がある
-- reviewer / admin / owner でだけ review queue badge が出る
-- list 画面に `loading / empty / error` がある
-- detail / editor / admin 画面に `error / permission_denied` がある
-- prototype 配下に `href="#"` が残っていない
+- `index.html` から 20 route すべてが開ける
+- `question.detail` の履歴は same page side panel で開く
+- `admin.members` で tab ごとに行が切り替わる
+- reviewer / admin / owner でだけ review queue button が残る
+- `docs/design/prototype/**/*.html` に `href="#"` が残っていない
 
-## 7. 更新手順
+## 8. GitHub Pages
 
-1. `docs/design/screen-map.md` の影響 row を特定する
-2. `assets/routes.js` の route metadata と scenario path を更新する
-3. `assets/mock-data.js` の screen body / actions / notices を更新する
-4. 必要なら wrapper page を追加または削除する
-5. `index.html` と `README.md` の scenario table を再確認する
-6. `Select-String -Pattern 'href=\"#\"' -Path docs/design/prototype/**/*.html` で placeholder link を確認する
+- `.github/workflows/deploy-pages.yml` は `docs/` 全体を GitHub Pages artifact として公開する
+- Pages root は `docs/index.html` で、公開後は `design/prototype/index.html` に自動で転送する
+- 想定 URL:
+  - root: `https://<user>.github.io/<repo>/`
+  - prototype index: `https://<user>.github.io/<repo>/design/prototype/index.html`
+- 初回は GitHub repository settings の `Pages` で source を `GitHub Actions` に切り替える

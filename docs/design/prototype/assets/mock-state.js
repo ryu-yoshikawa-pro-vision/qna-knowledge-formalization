@@ -1,97 +1,147 @@
 (function () {
-  const signedInRoles = ["owner", "admin", "reviewer", "member"];
-  const preMembershipActors = [
-    "unaffiliated authenticated user",
-    "invitation target user",
-    "join request applicant"
-  ];
+  function getRoutes() {
+    return (window.DESIGN_PROTO_ROUTES && window.DESIGN_PROTO_ROUTES.routes) || [];
+  }
 
-  function getRouteById(id) {
-    return window.DESIGN_PROTO_ROUTES.routes.find(function (route) {
-      return route.id === id;
+  function getRouteById(routeId) {
+    return getRoutes().find(function (route) {
+      return route.id === routeId;
     });
   }
 
   function getRouteBySlug(slug) {
-    return window.DESIGN_PROTO_ROUTES.routes.find(function (route) {
+    return getRoutes().find(function (route) {
       return route.slug === slug;
     });
   }
 
-  function toQuery(params) {
-    const search = new URLSearchParams();
-    Object.keys(params).forEach(function (key) {
-      const value = params[key];
-      if (value !== undefined && value !== null && value !== "") {
-        search.set(key, value);
-      }
-    });
-    const query = search.toString();
-    return query ? "?" + query : "";
+  function normalizeText(value) {
+    return (value || "")
+      .replace(/\u00a0/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
   }
 
-  function escapeHtml(value) {
-    return String(value)
-      .replaceAll("&", "&amp;")
-      .replaceAll("<", "&lt;")
-      .replaceAll(">", "&gt;")
-      .replaceAll('"', "&quot;")
-      .replaceAll("'", "&#39;");
+  function includesToken(list, value) {
+    return Array.isArray(list) && list.indexOf(value) >= 0;
   }
 
-  function buildHref(target, overrides, currentContext) {
-    const route = getRouteById(target) || getRouteBySlug(target);
+  function pickToken(list, requested, fallback) {
+    if (requested && includesToken(list, requested)) {
+      return requested;
+    }
+    return fallback || (Array.isArray(list) && list.length ? list[0] : "");
+  }
+
+  function fixtureLabel(fixture) {
+    var labels = {
+      owner: "owner",
+      admin: "admin",
+      reviewer: "reviewer",
+      member: "member",
+      "unaffiliated-user": "unaffiliated authenticated user",
+      "invitation-target-user": "invitation target user",
+      "join-request-applicant": "join request applicant",
+    };
+    return labels[fixture] || fixture;
+  }
+
+  function isPrivilegedFixture(fixture) {
+    return ["owner", "admin", "reviewer"].indexOf(fixture) >= 0;
+  }
+
+  function isAdminFixture(fixture) {
+    return ["owner", "admin"].indexOf(fixture) >= 0;
+  }
+
+  function prototypeBaseUrl() {
+    var href = (window.top && window.top.location && window.top.location.href) || window.location.href || "";
+    try {
+      return new URL("./", href);
+    } catch (error) {
+      return new URL("./", window.location.href);
+    }
+  }
+
+  function routeUrl(filename) {
+    return new URL(filename, prototypeBaseUrl());
+  }
+
+  function indexHref() {
+    return routeUrl("index.html").toString();
+  }
+
+  function resolveContext(route, search) {
+    var params = search instanceof URLSearchParams ? search : new URLSearchParams(search || location.search);
+    var requestedFixture = normalizeText(params.get("fixture"));
+    var requestedState = normalizeText(params.get("state"));
+    var requestedTab = normalizeText(params.get("tab"));
+    var requestedModal = normalizeText(params.get("modal"));
+    var invalidFixture = Boolean(requestedFixture) && !includesToken(route.fixtures, requestedFixture);
+    var resolvedFixture = pickToken(route.fixtures, requestedFixture, route.defaultFixture);
+
+    return {
+      fixture: invalidFixture ? requestedFixture : resolvedFixture,
+      requestedFixture: requestedFixture,
+      invalidFixture: invalidFixture,
+      state: pickToken(route.states, requestedState, route.defaultState),
+      tab: pickToken(route.tabs, requestedTab, route.defaultTab),
+      modal: pickToken(route.modals, requestedModal, ""),
+    };
+  }
+
+  function buildHref(routeId, overrides, current) {
+    var route = getRouteById(routeId);
+    var options = overrides || {};
+    var ctx = current || {};
     if (!route) {
-      return "#missing-route";
+      return "./index.html";
     }
 
-    const context = Object.assign({}, currentContext || {}, overrides || {});
-    const params = {};
-
-    if (route.defaultRole) {
-      params.role = context.role || route.defaultRole;
+    var params = new URLSearchParams();
+    var fixture = options.fixture;
+    if (!fixture) {
+      fixture = includesToken(route.fixtures, ctx.fixture) ? ctx.fixture : route.defaultFixture;
     }
-    if (route.defaultActor) {
-      params.actor = context.actor || route.defaultActor;
-    }
-    if (context.preset) {
-      params.preset = context.preset;
+    if (fixture) {
+      params.set("fixture", fixture);
     }
 
-    return route.slug + ".html" + toQuery(params);
-  }
+    var state = options.hasOwnProperty("state") ? options.state : "";
+    if (!state && route.defaultState) {
+      state = route.defaultState;
+    }
+    if (state && includesToken(route.states, state) && state !== route.defaultState) {
+      params.set("state", state);
+    }
 
-  function reviewBadgeVisible(role) {
-    return ["owner", "admin", "reviewer"].includes(role);
-  }
+    var tab = options.hasOwnProperty("tab") ? options.tab : "";
+    if (!tab && route.defaultTab) {
+      tab = route.defaultTab;
+    }
+    if (tab && includesToken(route.tabs, tab) && tab !== route.defaultTab) {
+      params.set("tab", tab);
+    }
 
-  function normalizeSelection(value, allowed, fallback) {
-    return allowed.includes(value) ? value : fallback;
-  }
+    var modal = options.hasOwnProperty("modal") ? options.modal : "";
+    if (modal && includesToken(route.modals, modal)) {
+      params.set("modal", modal);
+    }
 
-  function filterVisible(items, context) {
-    return (items || []).filter(function (item) {
-      if (item.roles && !item.roles.includes(context.role)) {
-        return false;
-      }
-      if (item.actors && !item.actors.includes(context.actor)) {
-        return false;
-      }
-      return true;
-    });
+    var target = routeUrl(route.slug + ".html");
+    target.search = params.toString();
+    return target.toString();
   }
 
   window.DESIGN_PROTO_STATE = {
-    signedInRoles,
-    preMembershipActors,
-    unreadCount: 7,
-    reviewQueueCount: 3,
-    getRouteById,
-    getRouteBySlug,
-    buildHref,
-    escapeHtml,
-    reviewBadgeVisible,
-    normalizeSelection,
-    filterVisible
+    getRouteById: getRouteById,
+    getRouteBySlug: getRouteBySlug,
+    resolveContext: resolveContext,
+    buildHref: buildHref,
+    normalizeText: normalizeText,
+    fixtureLabel: fixtureLabel,
+    isPrivilegedFixture: isPrivilegedFixture,
+    isAdminFixture: isAdminFixture,
+    indexHref: indexHref,
   };
 })();
