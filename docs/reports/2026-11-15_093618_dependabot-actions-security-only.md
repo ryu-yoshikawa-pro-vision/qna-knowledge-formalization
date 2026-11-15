@@ -16,15 +16,15 @@
 - Security updatesとversion updatesの設定区分: https://docs.github.com/en/code-security/how-tos/secure-your-supply-chain/secure-your-dependencies/configure-security-updates?learn=dependabot_security_updates
 - GitHub Actions ecosystemの設定: https://docs.github.com/en/code-security/how-tos/secure-your-supply-chain/secure-your-dependencies/auto-update-actions
 
-## 証拠（2026-11-15 09:36 JST）
+## 証拠（2026-11-15 09:40 JST）
 - 作業ブランチ: `codex/security-actions-dependabot-20261115`
+- PR: [#1](https://github.com/ryu-yoshikawa-pro-vision/qna-knowledge-formalization/pull/1)、Open/unmerged、初回head `6900b39f4de413fd8e1af951b3e93f6ac985ae56`
 - PyYAML parseとversion/ecosystem/directory/interval/limit/no-target-branch assert: PASS（python3）
 - `git diff --check`: PASS
 - `bash scripts/verify`: PASS=2, FAIL=0, SKIP=2。template contractとexecpolicy baselineがPASS。bash wrapperは不在、PowerShell側はPATHにcodexがなくSKIP。
-- PR head CI/commit SHA: PR作成後に確認する
+- 初回PR headに対するPR-triggered workflow runs: 0、combined statuses: 0。`deploy-pages.yml`には`pull_request` triggerがなく、PR CIは未実行。
 - 管理画面toggle/alerts: 未確認、この接続では読めない
 
 ## 残件
-- commit、push、PR作成
-- PRとhead SHA、CI run URL・結果
-- PR反映後のsecurity-update toggleとsecurity PR運用確認
+- 最新PR headを再確認し、CI未構成を維持記録する
+- PRのdefault branch反映とsecurity-update toggle/実動作確認
